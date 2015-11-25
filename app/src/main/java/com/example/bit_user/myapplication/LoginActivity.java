@@ -1,6 +1,7 @@
 package com.example.bit_user.myapplication;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
@@ -52,11 +53,16 @@ public class LoginActivity extends Activity {
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     //String requestURL = "http://192.168.1.13:8088/testserver2/list";
 
+    public static final String KEY_SIMPLE_DATA = "data";
+
     Button loginButton;
     EditText Login_id;
     EditText Login_password;
     Handler handler = new Handler();
     Button joinform;
+
+    String id;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,7 @@ public class LoginActivity extends Activity {
         joinform.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                //회원가입 버튼 누르면 회원가입 페이지로 넘기기
                 Intent intent = new Intent(getBaseContext(),JoinActivity.class);
                 startActivity(intent);
                 finish();
@@ -78,10 +85,14 @@ public class LoginActivity extends Activity {
         });
 
         loginButton.setOnClickListener(new OnClickListener() {
+
             public void onClick(View v) {
+                id = Login_id.getText().toString();
+                password = Login_password.getText().toString();
+
                 try {
                     WebTask asyncT = new WebTask();
-                    asyncT.execute();
+                    //asyncT.execute();
                     Log.e("---> ", "Http Response");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -89,8 +100,19 @@ public class LoginActivity extends Activity {
                 }
 
                 Intent intent = new Intent(getBaseContext(),MenuActivity.class);
+                /*
+                Intent intent = new Intent();
+                ComponentName componentName = new ComponentName(
+                        "com.example.bit_user.myapplication","com.example.bit_user.myapplication.MenuActivity");
+                intent.setComponent( componentName );
+                */
+                Bundle bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                intent.putExtra("ID_DATA", bundleData);
+
+                Log.e("login", "!!!!!!!id" + id);
+                Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
                 startActivity(intent);
-                finish();
             }
         });
     }
@@ -112,8 +134,8 @@ public class LoginActivity extends Activity {
 
                 //json params
                 JSONObject params1 = new JSONObject();
-                params1.put("userId",Login_id.getText().toString());
-                params1.put("userPassword", Login_password.getText().toString());
+                params1.put("userId",id);
+                params1.put("userPassword", password);
                 //Log.d("--->Login :", GSON.toJson(UserVo));
 
                 // 요청
