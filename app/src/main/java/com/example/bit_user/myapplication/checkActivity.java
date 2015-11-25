@@ -33,7 +33,7 @@ import java.util.List;
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
 
-public class checkActivity extends Activity  implements AdapterView.OnItemClickListener{
+public class checkActivity extends Activity {
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
     String[] data = {"수업목록"};
@@ -52,7 +52,7 @@ public class checkActivity extends Activity  implements AdapterView.OnItemClickL
         ArrayAdapter<String> adapter
                 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
         check_list.setAdapter(adapter);
-        check_list.setOnItemClickListener(this);
+       // check_list.setOnItemClickListener(this);
         Check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
