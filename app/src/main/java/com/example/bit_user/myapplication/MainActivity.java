@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(MainActivity.this, GCMPush.class);
+                Intent i = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(i);
                 finish();
             }
