@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,16 +28,21 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
 
 import java.io.Reader;
+
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
 
-public class checkActivity extends Activity {
-    private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+public class checkActivity extends Activity  {
 
+    private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    private ArrayList<String> arrayList;
+   private ArrayAdapter<String>adapter;
     String[] data = {"수업목록"};
+    String str;
     Button Check_btn;
     ListView check_list;
     EditText address;
@@ -49,14 +55,29 @@ public class checkActivity extends Activity {
         Check_btn  = (Button)findViewById(R.id.check_Btn);
         check_list=(ListView)findViewById(R.id.check_list);
         //출석리스트 만들기
-        ArrayAdapter<String> adapter
-                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
+
+        arrayList =new ArrayList<String>();
+        arrayList.add("안녕");
+        arrayList.add("하이");
+
+       adapter
+                = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,arrayList);
         check_list.setAdapter(adapter);
-       // check_list.setOnItemClickListener(this);
+
+        check_list.setAdapter(adapter);
+        check_list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        check_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                 str = (String)adapter.getItem(position);
+                Toast.makeText(getBaseContext(),str,Toast.LENGTH_SHORT).show();
+
+            }
+        });
         Check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                str.toString();
                 startLocationService();
                 finish();
                 if(longitude==null && latitude==null){
@@ -138,26 +159,6 @@ public class checkActivity extends Activity {
 
     //출석리스트 구현
 
-    public void onItemClick(AdapterView<?>view,List<String> list,String arg1) {
-
-
-        final String[] classData = {"삼성", "LG", "SK"};
-        final String title = ((TextView) list).getText().toString();
-
-        new AlertDialog.Builder(this).setTitle(title +"3.")
-                .setItems(classData,new DialogInterface.OnClickListener(){
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        System.out.println("++++"+which);
-                        Toast.makeText(getApplicationContext(), title+":" +which+"."+classData[which], Toast.LENGTH_SHORT).show();
-
-                    }
-
-
-                }).setNegativeButton("",null).show();
-
-    }
 
     private class WebTask extends AsyncTask<String, Void, String> {
 
