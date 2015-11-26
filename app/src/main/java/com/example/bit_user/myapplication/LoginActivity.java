@@ -165,6 +165,7 @@ public class LoginActivity extends Activity {
                 //5. 사용하기
                 Log.d("---> Login", result.getResult() );
 
+                //params1.getJSONArray()
                 status  = result.getResult();
                 return result.getResult();
 
@@ -184,6 +185,5 @@ public class LoginActivity extends Activity {
     }
 
     private class JSONResultString extends JSONResult<String> {
-
     }
 }

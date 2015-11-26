@@ -87,10 +87,6 @@ public class checkActivity extends Activity  {
                 asyncT.execute();
 
                 finish();
-             /*
-                if(longitude==null && latitude==null){
-                    Toast.makeText(getApplicationContext(), "GPS를 동의해주세요.", Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
     }
