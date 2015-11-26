@@ -40,7 +40,7 @@ public class checkActivity extends Activity  {
 
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     private ArrayList<String> arrayList;
-   private ArrayAdapter<String>adapter;
+    private ArrayAdapter<String>adapter;
     String[] data = {"수업목록"};
     String lesson;
     Button check_Btn;
@@ -60,18 +60,19 @@ public class checkActivity extends Activity  {
 
         arrayList =new ArrayList<String>();
         arrayList.add("안녕");
-        arrayList.add("하이");
+
 
        adapter= new ArrayAdapter<String>
                (this, android.R.layout.simple_list_item_1,arrayList);
 
         check_list.setAdapter(adapter);
 
-        check_list.setAdapter(adapter);
+
         check_list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         check_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 lesson = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),lesson,Toast.LENGTH_SHORT).show();
             check_lesson.setText(""+lesson);
@@ -83,18 +84,34 @@ public class checkActivity extends Activity  {
                 //str.toString();
                startLocationService();
 
-                WebTask asyncT = new WebTask();
-                asyncT.execute();
-
-                finish();
-             /*
                 if(longitude==null && latitude==null){
                     Toast.makeText(getApplicationContext(), "GPS를 동의해주세요.", Toast.LENGTH_SHORT).show();
-                }*/
+                }
 
+                WebTask asyncT = new WebTask();
+
+                asyncT.execute();
+                Log.d("list",arrayList.toString());
+               // finish();
             }
         });
     }
+
+    public void addList(ArrayList<String> arrList){
+
+        for(int i=0; i<arrList.size();i++)
+        {
+            Log.d("addList","addList--------------------->"+arrList.get(i) +"arrList.size()        " + arrList.size()  );
+            adapter.add(arrList.get(i).toString());
+        }
+
+    }
+
+    public ArrayList<String> addAdapter(ArrayList<String> arrayList)
+    {
+        return null;
+    }
+
     private void startLocationService() {
         // 위치 관리자 객체 참조
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -151,22 +168,25 @@ public class checkActivity extends Activity  {
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         }
 
+
         public void onProviderDisabled(String provider) {
         }
         public void onProviderEnabled(String provider) {
         }
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
+
     }
 
     //출석리스트 구현
 
 
-    private class WebTask extends AsyncTask<String, Void, String> {
+    private class WebTask extends AsyncTask<String, Void, ArrayList<String>> {
 
 
-        protected String doInBackground(String... params) {
-
+        protected ArrayList<String> doInBackground(String... params) {
+            JSONResultString result;
+            ArrayList<String> arrayList1 = new ArrayList<String>();
             try {
 
                 HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/check");
@@ -184,7 +204,7 @@ public class checkActivity extends Activity  {
                 JSONObject params1 = new JSONObject();
                 params1.put("latitude",latitude.toString());
                 params1.put("longitude",longitude.toString());
-                params1.put("lesson",lesson.toString());
+                params1.put("lesson",lesson);
 
                 Log.d("JoinData-->", params1.toString());
 
@@ -206,7 +226,7 @@ public class checkActivity extends Activity  {
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {
                     Log.e("HTTP fail-->", "Http Response Fail:" + responseCode);
-                    return "오류";
+                    return null;
                 } else {
                     Log.e("HTTPRequest-->", "정상");
 
@@ -215,16 +235,22 @@ public class checkActivity extends Activity  {
                 //4. JSON 파싱
                 Reader reader = request.bufferedReader();
                 //Log.d("Reader",reader);
-                JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
+                result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
 
                 //5. 사용하기
                 Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
-                //Log.d("-->data",result.getData());//데이터받아오기
+                Log.d("-->data",result.getData().toString());//데이터받아오기
+                arrayList1 = result.getData();
+               // arrayList.add(result.getData().toString());
+                Log.d("ar",arrayList1.toString());
+                /*for( int i=0 ; i< result.getData().size() ; i++) {
+                    arrayList.add(result.getData().toString());
+                }*/
 
+                addList(arrayList1);
 
-
-                return result.getResult();
+                return result.getData();
 
             } catch (Exception e3) {
                 e3.printStackTrace();
@@ -232,7 +258,7 @@ public class checkActivity extends Activity  {
             return null;
         }
 
-        private class JSONResultString extends JSONResult<String> {
+        private class JSONResultString extends JSONResult<ArrayList<String>> {
 
         }
 
