@@ -40,14 +40,14 @@ public class checkActivity extends Activity  {
 
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     private ArrayList<String> arrayList;
-    private ArrayAdapter<String>adapter;
+   private ArrayAdapter<String>adapter;
     String[] data = {"수업목록"};
-    public String lesson;
+    String lesson;
     Button check_Btn;
     ListView check_list;
     EditText check_lesson;
-    public Double longitude;
-    public Double latitude;
+    Double longitude;
+    Double latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +62,8 @@ public class checkActivity extends Activity  {
         arrayList.add("안녕");
         arrayList.add("하이");
 
-        adapter= new ArrayAdapter<String>
-                (this, android.R.layout.simple_list_item_1,arrayList);
-
+       adapter= new ArrayAdapter<String>
+               (this, android.R.layout.simple_list_item_1,arrayList);
         check_list.setAdapter(adapter);
 
         check_list.setAdapter(adapter);
@@ -72,21 +71,26 @@ public class checkActivity extends Activity  {
         check_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                lesson = adapter.getItem(position).toString();
+                lesson = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),lesson,Toast.LENGTH_SHORT).show();
-                check_lesson.setText(""+lesson);
+            check_lesson.setText(""+lesson);
             }
         });
         check_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //str.toString();
-                startLocationService();
+               startLocationService();
 
                 WebTask asyncT = new WebTask();
                 asyncT.execute();
 
                 finish();
+             /*
+                if(longitude==null && latitude==null){
+                    Toast.makeText(getApplicationContext(), "GPS를 동의해주세요.", Toast.LENGTH_SHORT).show();
+                }*/
+
             }
         });
     }
@@ -119,9 +123,10 @@ public class checkActivity extends Activity  {
             Toast.makeText(getApplicationContext(), "위치 확인이 시작되었습니다. 로그를 확인하세요.", Toast.LENGTH_SHORT).show();
             Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastLocation != null) {
-                latitude = lastLocation.getLatitude();
-                longitude = lastLocation.getLongitude();
-                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + " Longitude:"+ longitude, Toast.LENGTH_LONG).show();
+                 latitude = lastLocation.getLatitude();
+                 longitude = lastLocation.getLongitude();
+
+               Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + " Longitude:"+ longitude, Toast.LENGTH_LONG).show();
             }
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -132,6 +137,7 @@ public class checkActivity extends Activity  {
      * 리스너 클래스 정의 ....
      */
     private class GPSListener implements LocationListener {
+
         /**
          * 위치 정보가 확인될 때 자동 호출되는 메소드
          */
@@ -171,27 +177,30 @@ public class checkActivity extends Activity  {
                 request.acceptJson();
                 request.accept(HttpRequest.CONTENT_TYPE_JSON);
                 request.contentType("application/json", "UTF-8");
-
                 Log.d("latitude",latitude.toString());
                 Log.d("longitude",longitude.toString());
                 // 데이터 세팅
                 JSONObject params1 = new JSONObject();
-                params1.put("latitude",latitude);
-                params1.put("longitude",longitude);
-                params1.put("lesson",lesson);
+                params1.put("latitude",latitude.toString());
+                params1.put("longitude",longitude.toString());
+                params1.put("lesson",lesson.toString());
 
                 Log.d("JoinData-->", params1.toString());
+
 
                 // 요청
                 request.send(params1.toString());
 
-                // query string 으로 보내기
+                // query striing 으로 보내기
                 //request.send(  "id=" + Edit_name.getText().toString() + "&password=" + Edit_name.getText().toString() + "&name=" +  Edit_name.getText().toString() );
+
+
                 //HttpRequest request = HttpRequest.get("http://192.168.1.13:8088/testserver2/list?id=asdf");
                 // 1. 타임 아웃 설정
                 //request.connectTimeout(2000).readTimeout(2000);
                 // 2. header 세팅
                 //request.accept(HttpRequest.CONTENT_TYPE_JSON);
+
                 // 3. 요청
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {
@@ -199,6 +208,7 @@ public class checkActivity extends Activity  {
                     return "오류";
                 } else {
                     Log.e("HTTPRequest-->", "정상");
+
                 }
 
                 //4. JSON 파싱
@@ -210,6 +220,8 @@ public class checkActivity extends Activity  {
                 //5. 사용하기
                 Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
                 //Log.d("-->data",result.getData());//데이터받아오기
+
+
 
                 return result.getResult();
 
