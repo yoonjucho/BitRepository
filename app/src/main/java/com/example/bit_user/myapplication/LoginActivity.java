@@ -68,6 +68,7 @@ public class LoginActivity extends Activity {
     String password;
     String status;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

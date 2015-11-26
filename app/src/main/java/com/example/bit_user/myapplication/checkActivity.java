@@ -71,6 +71,7 @@ public class checkActivity extends Activity  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  str = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),str,Toast.LENGTH_SHORT).show();
+
             }
         });
         Check_btn.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +217,10 @@ public class checkActivity extends Activity  {
 
                 //5. 사용하기
                 Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
+
+               /* Log.d("---> guestbook", result.getMessage() );*/
+
+               /* Log.d("---> guestbook", result.getData() );*/
 
 
                 return result.getResult();
