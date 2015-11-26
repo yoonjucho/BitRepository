@@ -7,11 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class LessonJoinActivity extends Activity {
+public class checkUpActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lesson_join);
+        setContentView(R.layout.activity_check_up);
     }
+
+
+
 }

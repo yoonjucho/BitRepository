@@ -11,6 +11,7 @@
     <permission
         android:name="org.android.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.icelancer.androidgcmclient.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.google.adroid.c2dm.permission.RECEIVE" />
@@ -29,7 +30,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -62,16 +63,14 @@
             android:label="@string/title_activity_join" >
         </activity>
         <activity
-        android:name=".LoginActivity"
-        android:label="@string/title_activity_login" >
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" >
         </activity>
-	
-	    <activity
+        <activity
             android:name=".GCMPush"
             android:exported="true"
             android:label="@string/title_activity_gcm" >
         </activity>
-
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" >
@@ -104,7 +103,6 @@
             android:name=".GCMBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
-
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
                 <category android:name="org.androidtown.gcm.push" />
@@ -115,6 +113,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <activity
+            android:name=".checkUpActivity"
+            android:label="@string/title_activity_check_up" >
+        </activity>
     </application>
 
 </manifest>
