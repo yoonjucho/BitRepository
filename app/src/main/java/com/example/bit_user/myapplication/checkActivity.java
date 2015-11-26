@@ -40,7 +40,7 @@ public class checkActivity extends Activity  {
 
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     private ArrayList<String> arrayList;
-   private ArrayAdapter<String>adapter;
+    private ArrayAdapter<String>adapter;
     String[] data = {"수업목록"};
     String lesson;
     Button check_Btn;
@@ -62,8 +62,8 @@ public class checkActivity extends Activity  {
         arrayList.add("안녕");
         arrayList.add("하이");
 
-       adapter= new ArrayAdapter<String>
-               (this, android.R.layout.simple_list_item_1,arrayList);
+        adapter= new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1,arrayList);
         check_list.setAdapter(adapter);
 
         check_list.setAdapter(adapter);
@@ -73,14 +73,14 @@ public class checkActivity extends Activity  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lesson = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),lesson,Toast.LENGTH_SHORT).show();
-            check_lesson.setText(""+lesson);
+                check_lesson.setText(""+lesson);
             }
         });
         check_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //str.toString();
-               startLocationService();
+                startLocationService();
 
                 WebTask asyncT = new WebTask();
                 asyncT.execute();
@@ -123,10 +123,10 @@ public class checkActivity extends Activity  {
             Toast.makeText(getApplicationContext(), "위치 확인이 시작되었습니다. 로그를 확인하세요.", Toast.LENGTH_SHORT).show();
             Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastLocation != null) {
-                 latitude = lastLocation.getLatitude();
-                 longitude = lastLocation.getLongitude();
+                latitude = lastLocation.getLatitude();
+                longitude = lastLocation.getLongitude();
 
-               Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + " Longitude:"+ longitude, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + " Longitude:"+ longitude, Toast.LENGTH_LONG).show();
             }
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -237,3 +237,4 @@ public class checkActivity extends Activity  {
 
     }
 }
+
