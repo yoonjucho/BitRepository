@@ -1,7 +1,10 @@
 package com.example.bit_user.myapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
@@ -63,6 +66,7 @@ public class LoginActivity extends Activity {
 
     String id;
     String password;
+    String status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,29 +96,33 @@ public class LoginActivity extends Activity {
 
                 try {
                     WebTask asyncT = new WebTask();
-                    //asyncT.execute();
+                    asyncT.execute();
                     Log.e("---> ", "Http Response");
+                    checkSuccess(status);
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e("---> ", "Http Response Fail");
                 }
-
-                Intent intent = new Intent(getBaseContext(),MenuActivity.class);
-                /*
-                Intent intent = new Intent();
-                ComponentName componentName = new ComponentName(
-                        "com.example.bit_user.myapplication","com.example.bit_user.myapplication.MenuActivity");
-                intent.setComponent( componentName );
-                */
-                Bundle bundleData = new Bundle();
-                bundleData.putString("ID",id);
-                intent.putExtra("ID_DATA", bundleData);
-
-                Log.e("login", "!!!!!!!id" + id);
-                Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
-                startActivity(intent);
             }
         });
+    }
+
+    public void checkSuccess(String status) {
+        if(status.equals("success")) {
+            Intent intent = new Intent(getBaseContext(), MenuActivity.class);
+            Bundle bundleData = new Bundle();
+            bundleData.putString("ID", id);
+            intent.putExtra("ID_DATA", bundleData);
+
+            Log.e("login", "!!!!!!!id" + id);
+            Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
+            startActivity(intent);
+            finish();
+        }else if(status.equals("fail")){
+            Toast.makeText(getApplicationContext(), "wrong id, password",Toast.LENGTH_LONG).show();
+            //return;
+        }
     }
 
     private class WebTask extends AsyncTask<String, Void, String> {
@@ -156,6 +164,7 @@ public class LoginActivity extends Activity {
                 //5. 사용하기
                 Log.d("---> Login", result.getResult() );
 
+                status  = result.getResult();
                 return result.getResult();
 
             } catch (Exception e3) {
@@ -167,23 +176,11 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-// JSON 결과확인
-
+        // JSON 결과확인
             super.onPostExecute(result);
             Toast.makeText(LoginActivity.this, result, Toast.LENGTH_LONG).show();
         }
     }
-
-    private void println(String msg) {
-        final String output = msg;
-        handler.post(new Runnable() {
-            public void run() {
-                Log.d(TAG, output);
-                Toast.makeText(getApplicationContext(), output, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
 
     private class JSONResultString extends JSONResult<String> {
 
