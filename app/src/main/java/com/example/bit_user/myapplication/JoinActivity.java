@@ -197,9 +197,6 @@ public class JoinActivity extends Activity {
                 // query striing 으로 보내기
                 //request.send(  "id=" + Edit_name.getText().toString() + "&password=" + Edit_name.getText().toString() + "&name=" +  Edit_name.getText().toString() );
 
-
-
-
                 //HttpRequest request = HttpRequest.get("http://192.168.1.13:8088/testserver2/list?id=asdf");
                 // 1. 타임 아웃 설정
                 //request.connectTimeout(2000).readTimeout(2000);
