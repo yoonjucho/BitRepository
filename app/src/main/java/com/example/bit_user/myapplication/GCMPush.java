@@ -10,6 +10,7 @@ package com.example.bit_user.myapplication;
 
         import android.view.View;
         import android.view.View.OnClickListener;
+        import android.widget.ArrayAdapter;
         import android.widget.Button;
         import android.widget.EditText;
         import android.widget.TextView;
@@ -39,6 +40,7 @@ package com.example.bit_user.myapplication;
 public class GCMPush extends Activity {
     public static final String TAG = "GCMPush";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    ArrayList<String> idList = new ArrayList<String>();
 
     String id;
     EditText messageInput;
@@ -48,14 +50,9 @@ public class GCMPush extends Activity {
     String regId;
     String status;
     Handler handler = new Handler();
-
     private Random random ;
-
     private int TTLTime = 60;
-
     private	int RETRY = 3;
-
-    ArrayList<String> idList = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +91,14 @@ public class GCMPush extends Activity {
         });
     }
 
+    public void addList(ArrayList<String> arrList){
+        for(int i=0; i<arrList.size();i++)
+        {
+            Log.d("addList","addList--------------------->"+arrList.get(i) +"arrList.size()        " + arrList.size()  );
+            idList.add(arrList.get(i).toString());
+        }
+    }
+
     private void registerDevice() {
         GCMTask gcmTask = new GCMTask();
         gcmTask.execute();
@@ -103,8 +108,9 @@ public class GCMPush extends Activity {
     }
 
     private class GCMTask extends AsyncTask<String, Void, String> {
-        protected String doInBackground(String... params) {
+        ArrayList<String> arrayList = new ArrayList<String>();
 
+        protected String doInBackground(String... params) {
             try {
                 HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/phoneidlist-by-groupno");
                 request.connectTimeout(2000).readTimeout(2000);
@@ -119,10 +125,12 @@ public class GCMPush extends Activity {
                 JSONObject params1 = new JSONObject();
                 //params1.put("id", id);
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                //일단 project_id 를 보내주는거로 함!! 고쳐줘야함
                 params1.put("id", gcm.register(GCMInfo.PROJECT_ID));
                 Log.d("GCM Data-->", params1.toString());
 
                 // 요청
+                request.send( params1.toString() );
                 request.send( params1.toString() );
 
                 int responseCode = request.code();
@@ -138,7 +146,9 @@ public class GCMPush extends Activity {
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
 
-                idList = result.getData();
+                arrayList = result.getData();
+                addList(arrayList);
+
                 status  = result.getResult();
                 Log.d("---> ResponseResult-->", result.getResult() );  // "success"? or "fail"?
                 return result.getResult();
@@ -170,7 +180,6 @@ public class GCMPush extends Activity {
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                 regId = gcm.register(GCMInfo.PROJECT_ID);
                 println("ID : " + regId);
-
                 //idList.clear();
                 //idList.add(regId);
             } catch(Exception ex) {
@@ -202,7 +211,6 @@ public class GCMPush extends Activity {
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
-
         }
 
         public void sendText(String msg)

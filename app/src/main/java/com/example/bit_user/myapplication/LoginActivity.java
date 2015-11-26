@@ -68,7 +68,6 @@ public class LoginActivity extends Activity {
     String password;
     String status;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,7 +164,6 @@ public class LoginActivity extends Activity {
                 //5. 사용하기
                 Log.d("---> Login", result.getResult() );
 
-                //params1.getJSONArray()
                 status  = result.getResult();
                 return result.getResult();
 
@@ -178,12 +176,13 @@ public class LoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-        // JSON 결과확인
+            // JSON 결과확인
             super.onPostExecute(result);
             Toast.makeText(LoginActivity.this, result, Toast.LENGTH_LONG).show();
         }
     }
 
     private class JSONResultString extends JSONResult<String> {
+
     }
 }
