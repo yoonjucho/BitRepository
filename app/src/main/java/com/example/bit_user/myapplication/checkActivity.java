@@ -71,9 +71,9 @@ public class checkActivity extends Activity  {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  str = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),str,Toast.LENGTH_SHORT).show();
-
             }
         });
+
         Check_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +87,7 @@ public class checkActivity extends Activity  {
             }
         });
     }
+
     private void startLocationService() {
         // 위치 관리자 객체 참조
         LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -118,7 +119,7 @@ public class checkActivity extends Activity  {
                  latitude = lastLocation.getLatitude();
                  longitude = lastLocation.getLongitude();
 
-               // Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + "\nLongitude:"+ longitude, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + "\nLongitude:"+ longitude, Toast.LENGTH_LONG).show();
             }
         } catch(Exception ex) {
             ex.printStackTrace();
