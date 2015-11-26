@@ -46,6 +46,7 @@
     <string name="create_board_button">게시글 등록</string>
     <string name="title_activity_check">checkActivity</string>
     <string name="title_activity_gcmpush">GCMpushActivity</string>
+    <string name="title_activity_check_up">checkUpActivity</string>
 
 
 </resources>

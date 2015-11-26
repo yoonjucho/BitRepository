@@ -13,22 +13,24 @@
         android:layout_height="wrap_content"
         android:text="Lesson List"
         android:textSize="20dp"
-        android:layout_above="@+id/check_lesson"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/check_list"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/check_lesson" />
+        android:layout_below="@+id/check_lesson"
+        android:layout_above="@+id/check_Btn" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_lesson"
+        android:layout_below="@+id/TextView1"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_alignEnd="@+id/check_list" />
+        android:layout_alignEnd="@+id/TextView1" />
 
     <Button
         android:layout_width="wrap_content"
@@ -36,6 +38,5 @@
         android:id="@+id/check_Btn"
         android:text="승인"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="48dp" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
