@@ -64,6 +64,7 @@ public class checkActivity extends Activity  {
 
        adapter= new ArrayAdapter<String>
                (this, android.R.layout.simple_list_item_1,arrayList);
+
         check_list.setAdapter(adapter);
 
         check_list.setAdapter(adapter);
