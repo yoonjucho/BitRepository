@@ -6,5 +6,7 @@
         <!-- Customize your theme here. -->
 
     </style>
-
+    <style name="AppTheme1" parent="android:Theme.Material">
+        <!-- theme customizations -->
+    </style>
 </resources>

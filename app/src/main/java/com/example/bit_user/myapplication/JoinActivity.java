@@ -150,30 +150,13 @@ public class JoinActivity extends Activity {
 
                     WebTask asyncT = new WebTask();
                     asyncT.execute();
+                    chechSuccess(status);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e("---> ", "Http Response Fail");
                 }
-       if(status.equals("success")) {
-           Intent intent = new Intent(getBaseContext(), LoginActivity.class);
-           startActivity(intent);
-           finish();
-       }else{
-           ProgressDialog dialog = null;
-           dialog.dismiss();
-               AlertDialog.Builder builder3 = new AlertDialog.Builder(JoinActivity.this);
-               builder3.setMessage( "오류.").setCancelable(false)
-                       .setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog,int id) {
-                           }
-                       });
-               AlertDialog alert = builder3.create();
-               alert.show();
-               return;
 
-       }
 
             }
         });
@@ -304,7 +287,28 @@ public class JoinActivity extends Activity {
             }
         });
     }
+    public void chechSuccess(String status){
+        if(status.equals("success")) {
+            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            ProgressDialog dialog = null;
+            dialog.dismiss();
+            AlertDialog.Builder builder3 = new AlertDialog.Builder(JoinActivity.this);
+            builder3.setMessage( "오류.").setCancelable(false)
+                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog,int id) {
+                        }
+                    });
+            AlertDialog alert = builder3.create();
+            alert.show();
+            return;
 
+        }
+
+    }
     private class JSONResultString extends JSONResult<String> {
 
 
