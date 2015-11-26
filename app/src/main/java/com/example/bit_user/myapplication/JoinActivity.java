@@ -164,8 +164,6 @@ public class JoinActivity extends Activity {
     }
 
     private class WebTask extends AsyncTask<String, Void, String> {
-
-
         protected String doInBackground(String... params) {
 
             try {
@@ -192,19 +190,7 @@ public class JoinActivity extends Activity {
 
 
                 // 요청
-                request.send( params1.toString() );
-
-                // query striing 으로 보내기
-                //request.send(  "id=" + Edit_name.getText().toString() + "&password=" + Edit_name.getText().toString() + "&name=" +  Edit_name.getText().toString() );
-
-
-
-
-                //HttpRequest request = HttpRequest.get("http://192.168.1.13:8088/testserver2/list?id=asdf");
-                // 1. 타임 아웃 설정
-                //request.connectTimeout(2000).readTimeout(2000);
-                // 2. header 세팅
-                //request.accept(HttpRequest.CONTENT_TYPE_JSON);
+                request.send( params1.toString());
 
                 // 3. 요청
                 int responseCode = request.code();
@@ -223,17 +209,13 @@ public class JoinActivity extends Activity {
                 reader.close();
 
                 //5. 사용하기
-               Log.d("---> ResponseResult-->", result.getResult() );  // "success"? or "fail"?
+                Log.d("---> ResponseResult-->", result.getResult() );  // "success"? or "fail"?
 
                /* Log.d("---> guestbook", result.getMessage() );*/
 
                /* Log.d("---> guestbook", result.getData() );*/
                 status  = result.getResult();
-
                 return result.getResult();
-
-
-
             } catch (Exception e3) {
                 e3.printStackTrace();
             }
@@ -287,6 +269,7 @@ public class JoinActivity extends Activity {
             }
         });
     }
+
     public void chechSuccess(String status){
         if(status.equals("success")) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
