@@ -36,7 +36,6 @@ package com.example.bit_user.myapplication;
 
         import static com.github.kevinsawicki.http.HttpRequest.post;
 
-
 public class GCMPush extends Activity {
     public static final String TAG = "GCMPush";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();

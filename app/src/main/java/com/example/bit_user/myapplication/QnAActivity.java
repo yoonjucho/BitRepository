@@ -18,7 +18,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class QnAActivity extends Activity implements View.OnClickListener {
     EditText ask_Message;
     Button ask_btn;
@@ -26,9 +25,7 @@ public class QnAActivity extends Activity implements View.OnClickListener {
     String regId;
     Handler handler = new android.os.Handler();
     private Random random ;
-
     private int TTLTime = 60;
-
     private	int RETRY = 3;
     ArrayList<String> idList = new ArrayList<String>();
 
@@ -42,17 +39,12 @@ public class QnAActivity extends Activity implements View.OnClickListener {
         registerDevice();
 
        ask_btn.setOnClickListener(this);
-
     }
-
 
     @Override
     public void onClick(View v) {
-
             String data = ask_Message.getText().toString();
             sendToDevice(data);
-
-
     }
     private void registerDevice() {
         RegisterThread registerObj = new RegisterThread();
@@ -86,16 +78,14 @@ public class QnAActivity extends Activity implements View.OnClickListener {
         public SendThread(String inData) {
             data = inData;
         }
-
         public void run() {
-
             try {
                 sendText(data);
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
-
         }
+
 
         public void sendText(String msg)
                 throws Exception
