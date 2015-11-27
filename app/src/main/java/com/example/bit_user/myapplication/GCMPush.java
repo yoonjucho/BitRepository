@@ -109,31 +109,31 @@ public class GCMPush extends Activity {
                 HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/phoneidlist-by-groupno");
                 request.connectTimeout(2000).readTimeout(2000);
 
-                // JSON  Æ÷¸ËÀ¸·Î º¸³»±â  => POST ¹æ½Ä
+
                 request.acceptCharset("UTF-8");
                 request.acceptJson();
                 request.accept(HttpRequest.CONTENT_TYPE_JSON);
                 request.contentType( "application/json", "UTF-8" );
 
-                // µ¥ÀÌÅÍ ¼¼ÆÃ
+
                 JSONObject params1 = new JSONObject();
                 //params1.put("id", id);
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                 params1.put("id", gcm.register(GCMInfo.PROJECT_ID));
                 Log.d("GCM Data-->", params1.toString());
 
-                // ¿äÃ»
+
                 request.send( params1.toString() );
 
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {
                     Log.e("HTTP fail-->", "Http Response Fail:" + responseCode );
-                    return "¿À·ù";
+                    return "ï¿½ï¿½ï¿½ï¿½";
                 }else {
-                    Log.e("HTTPRequest-->", "Á¤»ó");
+                    Log.e("HTTPRequest-->", "ï¿½ï¿½ï¿½ï¿½");
                 }
 
-                //4. JSON ÆÄ½Ì
+
                 Reader reader = request.bufferedReader();
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
@@ -153,7 +153,7 @@ public class GCMPush extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-        // JSON °á°úÈ®ÀÎ
+        // JSON ï¿½ï¿½ï¿½È®ï¿½ï¿½
             super.onPostExecute(result);
             Toast.makeText(GCMPush.this, result, Toast.LENGTH_LONG).show();
         }

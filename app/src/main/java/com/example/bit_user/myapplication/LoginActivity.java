@@ -98,7 +98,7 @@ public class LoginActivity extends Activity {
                 try {
                     WebTask asyncT = new WebTask();
                     asyncT.execute();
-                    Log.e("---> ", "Http Response");
+                    //Log.e("---> ", "Http Response");
                     checkSuccess(status);
 
                 } catch (Exception ex) {
@@ -110,7 +110,7 @@ public class LoginActivity extends Activity {
     }
 
     public void checkSuccess(String status) {
-        if(status.equals("success")) {
+        if(status !=null && status.equals("success")) {
             Intent intent = new Intent(getBaseContext(), MenuActivity.class);
             Bundle bundleData = new Bundle();
             bundleData.putString("ID", id);
@@ -120,7 +120,7 @@ public class LoginActivity extends Activity {
             Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
             startActivity(intent);
             finish();
-        }else if(status.equals("fail")){
+        }else if(status != null && status.equals("fail")){
             Toast.makeText(getApplicationContext(), "wrong id, password",Toast.LENGTH_LONG).show();
             //return;
         }
@@ -167,7 +167,7 @@ public class LoginActivity extends Activity {
 
                 //params1.getJSONArray()
                 status  = result.getResult();
-                return result.getResult();
+             /*   return result.getResult()*/;
 
             } catch (Exception e3) {
                 e3.printStackTrace();
