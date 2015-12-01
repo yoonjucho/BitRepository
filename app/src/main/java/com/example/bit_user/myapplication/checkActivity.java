@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,49 +34,65 @@ import java.io.Reader;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.TimerTask;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
+
 
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
 
 public class checkActivity extends Activity  {
 
+
+    public static final String KEY_SIMPLE_DATA = "data";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     private ArrayList<String> arrayList;
     private ArrayAdapter<String>adapter;
-    String[] data = {"수업목록"};
+
     String lesson;
     Button check_Btn;
     ListView check_list;
     EditText check_lesson;
     Double longitude;
     Double latitude;
-
+    String id;
+    Bundle bundleData;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
+
+        Intent intent = getIntent();
+        Bundle bundleData = intent.getBundleExtra("ID_DATA");
+        Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
+
+        if(bundleData == null){
+            Toast.makeText(this, "Bundle data is null!",Toast.LENGTH_LONG).show();
+            return;
+        }
+        id = bundleData.getString("ID");
+        Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
+        System.out.print(id);
+
+
+
         check_Btn  = (Button)findViewById(R.id.check_Btn);
         check_list=(ListView)findViewById(R.id.check_list);
         check_lesson=(EditText)findViewById(R.id.check_lesson);
         //출석리스트 만들기
         arrayList =new ArrayList<String>();
-        arrayList.add("안녕");
+        arrayList.add("강의 리스트");
 
         adapter= new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1,arrayList);
-
-
-                    check_list.setAdapter(adapter);
+        check_list.setAdapter(adapter);
                     check_list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
 
         check_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LessonListTask listTask= new LessonListTask();
+                listTask.execute();
                 lesson = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),lesson,Toast.LENGTH_SHORT).show();
                 check_lesson.setText(""+lesson);
@@ -91,7 +108,7 @@ public class checkActivity extends Activity  {
                     Toast.makeText(getApplicationContext(), "GPS를 동의해주세요.", Toast.LENGTH_SHORT).show();
                 }
 
-                WebTask asyncT = new WebTask();
+                CheckTask asyncT = new CheckTask();
 
                 asyncT.execute();
                 Log.d("list",arrayList.toString());
@@ -140,6 +157,7 @@ public class checkActivity extends Activity  {
         float minDistance = 0;
 
         // GPS를 이용한 위치 요청
+
         manager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 minTime,
@@ -196,15 +214,15 @@ public class checkActivity extends Activity  {
 
     }
     //출석리스트 구현
-    private class WebTask extends AsyncTask<String,Void,String> {
+    private class LessonListTask extends AsyncTask<String, Void, ArrayList<String>> {
 
 
-        protected String doInBackground(String... params) {
+        protected ArrayList<String> doInBackground(String... params) {
             JSONResultString result;
-
+            ArrayList<String> arrayList1 = new ArrayList<String>();
             try {
 
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/check");
+                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/group/classlist");
 
                 // reiquest 설정
                 request.connectTimeout(2000).readTimeout(2000);
@@ -213,18 +231,13 @@ public class checkActivity extends Activity  {
                 request.acceptJson();
                 request.accept(HttpRequest.CONTENT_TYPE_JSON);
                 request.contentType("application/json", "UTF-8");
-                Log.d("latitude", latitude.toString());
-                Log.d("longitude", longitude.toString());
+
                 // 데이터 세팅
                 JSONObject params1 = new JSONObject();
-                params1.put("latitude", latitude.toString());
-                params1.put("longitude", longitude.toString());
-                params1.put("lesson", lesson);
+                params1.put("userId",id.toString());
+
 
                 Log.d("JoinData-->", params1.toString());
-
-
-                // 요청
                 request.send(params1.toString());
 
                 // 3. 요청
@@ -239,15 +252,23 @@ public class checkActivity extends Activity  {
 
                 //4. JSON 파싱
                 Reader reader = request.bufferedReader();
-
+                //Log.d("Reader",reader);
                 result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
 
                 //5. 사용하기
                 Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
+                Log.d("-->data",result.getData().toString());//데이터받아오기
+                arrayList1 = result.getData();
+                // arrayList.add(result.getData().toString());
+                Log.d("ar",arrayList1.toString());
+                /*for( int i=0 ; i< result.getData().size() ; i++) {
+                    arrayList.add(result.getData().toString());
+                }*/
 
+                addList(arrayList1);
 
-                return result.getMessage();
+                return result.getData();
 
             } catch (Exception e3) {
                 e3.printStackTrace();
@@ -255,17 +276,18 @@ public class checkActivity extends Activity  {
             return null;
         }
 
-        private class JSONResultString extends JSONResult<String> {
+        private class JSONResultString extends JSONResult<ArrayList<String>> {
 
         }
 
+    }
         //출석체크
-        private class WebTask1 extends AsyncTask<String, Void, ArrayList<String>> {
+        private class CheckTask extends AsyncTask<String, Void,String> {
 
 
-            protected ArrayList<String> doInBackground(String... params) {
+            protected String doInBackground(String... params) {
                 JSONResultString result;
-                ArrayList<String> arrayList1 = new ArrayList<String>();
+
                 try {
 
                     HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/check");
@@ -280,7 +302,7 @@ public class checkActivity extends Activity  {
 
                     // 데이터 세팅
                     JSONObject params1 = new JSONObject();
-                    params1.put("ID", latitude.toString());
+                    params1.put("userId", id.toString());
 
 
                     Log.d("JoinData-->", params1.toString());
@@ -307,14 +329,9 @@ public class checkActivity extends Activity  {
 
                     //5. 사용하기
                     Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
-                    Log.d("-->data", result.getData().toString());//데이터받아오기
-                    arrayList1 = result.getData();
 
-                    Log.d("ar", arrayList1.toString());
 
-                    addList(arrayList1);
-
-                    return result.getData();
+                    return result.getResult();
 
                 } catch (Exception e3) {
                     e3.printStackTrace();
@@ -322,10 +339,10 @@ public class checkActivity extends Activity  {
                 return null;
             }
 
-            private class JSONResultString extends JSONResult<ArrayList<String>> {
+            private class JSONResultString extends JSONResult<String> {
             }
         }
 
             }
 
-        }
+

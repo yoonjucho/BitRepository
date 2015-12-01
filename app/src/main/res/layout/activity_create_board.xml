@@ -22,11 +22,11 @@
         android:layout_height="330dp"
         android:id="@+id/scrollView"
         android:fillViewport="false">
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/board_content"
-        />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/board_content"
+            />
     </ScrollView>
 
     <RelativeLayout
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/spinner"
             />
-        </RelativeLayout>
+    </RelativeLayout>
 
     <Button
         android:layout_width="wrap_content"
