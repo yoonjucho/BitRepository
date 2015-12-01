@@ -62,8 +62,8 @@ public class checkActivity extends Activity  {
         arrayList.add("안녕");
 
 
-        adapter= new ArrayAdapter<String>
-                (this, android.R.layout.simple_list_item_1,arrayList);
+       adapter= new ArrayAdapter<String>
+               (this, android.R.layout.simple_list_item_1,arrayList);
         check_list.setAdapter(adapter);
 
 
@@ -74,14 +74,14 @@ public class checkActivity extends Activity  {
 
                 lesson = (String)adapter.getItem(position);
                 Toast.makeText(getBaseContext(),lesson,Toast.LENGTH_SHORT).show();
-                check_lesson.setText(""+lesson);
+            check_lesson.setText(""+lesson);
             }
         });
         check_Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //str.toString();
-                startLocationService();
+               startLocationService();
 
                 if(longitude==null && latitude==null){
                     Toast.makeText(getApplicationContext(), "GPS를 동의해주세요.", Toast.LENGTH_SHORT).show();
@@ -97,11 +97,13 @@ public class checkActivity extends Activity  {
     }
 
     public void addList(ArrayList<String> arrList){
+
         for(int i=0; i<arrList.size();i++)
         {
             Log.d("addList","addList--------------------->"+arrList.get(i) +"arrList.size()        " + arrList.size()  );
             adapter.add(arrList.get(i).toString());
         }
+
     }
 
     public ArrayList<String> addAdapter(ArrayList<String> arrayList)
@@ -138,10 +140,10 @@ public class checkActivity extends Activity  {
             Toast.makeText(getApplicationContext(), "위치 확인이 시작되었습니다. 로그를 확인하세요.", Toast.LENGTH_SHORT).show();
             Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastLocation != null) {
-                latitude = lastLocation.getLatitude();
-                longitude = lastLocation.getLongitude();
+                 latitude = lastLocation.getLatitude();
+                 longitude = lastLocation.getLongitude();
 
-                Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + " Longitude:"+ longitude, Toast.LENGTH_LONG).show();
+               Toast.makeText(getApplicationContext(), "Last Known Location : " + "Latitude : "+ latitude + " Longitude:"+ longitude, Toast.LENGTH_LONG).show();
             }
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -204,7 +206,20 @@ public class checkActivity extends Activity  {
                 params1.put("lesson",lesson);
 
                 Log.d("JoinData-->", params1.toString());
+
+
+                // 요청
                 request.send(params1.toString());
+
+                // query striing 으로 보내기
+                //request.send(  "id=" + Edit_name.getText().toString() + "&password=" + Edit_name.getText().toString() + "&name=" +  Edit_name.getText().toString() );
+
+
+                //HttpRequest request = HttpRequest.get("http://192.168.1.13:8088/testserver2/list?id=asdf");
+                // 1. 타임 아웃 설정
+                //request.connectTimeout(2000).readTimeout(2000);
+                // 2. header 세팅
+                //request.accept(HttpRequest.CONTENT_TYPE_JSON);
 
                 // 3. 요청
                 int responseCode = request.code();
@@ -248,4 +263,3 @@ public class checkActivity extends Activity  {
 
     }
 }
-
