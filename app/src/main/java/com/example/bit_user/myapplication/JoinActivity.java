@@ -109,9 +109,6 @@ public class JoinActivity extends Activity {
         Edit_name = (EditText) findViewById(R.id.Edit_name);
         radio_position = (RadioGroup) findViewById(R.id.radio_position);
         Phoneid = (RadioButton) findViewById(R.id.Phoneid);
-     /*   String id = Edit_id.toString();
-        String password = Edit_password.toString();
-        String name = Edit_name.toString();*/
 
         radio_position.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -133,7 +130,6 @@ public class JoinActivity extends Activity {
         Phoneid.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 try {
-                    // 단말 등록하고 등록 ID 받기
                     registerDevice();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -141,23 +137,19 @@ public class JoinActivity extends Activity {
             }
         });
 
-
-
         registerButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                try {
-                    //
+                id = Edit_id.getText().toString();
+                password = Edit_password.getText().toString();
+                name = Edit_name.getText().toString();
 
+                try {
                     WebTask asyncT = new WebTask();
                     asyncT.execute();
-                    chechSuccess(status);
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e("---> ", "Http Response Fail");
                 }
-
-
             }
         });
 
@@ -172,7 +164,6 @@ public class JoinActivity extends Activity {
 
                 // reiquest 설정
                 request.connectTimeout(2000).readTimeout(2000);
-                // JSON  포맷으로 보내기  => POST 방식
                 request.acceptCharset("UTF-8");
                 request.acceptJson();
                 request.accept(HttpRequest.CONTENT_TYPE_JSON);
@@ -180,41 +171,34 @@ public class JoinActivity extends Activity {
 
                 // 데이터 세팅
                 JSONObject params1 = new JSONObject();
-                params1.put("id",Edit_id.getText().toString());
-                params1.put("password", Edit_password.getText().toString());
-                params1.put("name", Edit_name.getText().toString());
-                params1.put("type",radio_position.getCheckedRadioButtonId());
+                params1.put("userId",id);
+                params1.put("userPassword", password);
+                params1.put("userName", name);
+                params1.put("userType",position);
                 params1.put("phoneId",phoneId.toString());
 
                 Log.d("JoinData-->", params1.toString());
 
+                request.send(params1.toString());
 
-                // 요청
-                request.send( params1.toString());
-
-                // 3. 요청
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {
                     Log.e("HTTP fail-->", "Http Response Fail:" + responseCode );
                     return "오류";
                 }else {
                     Log.e("HTTPRequest-->", "정상");
-
                 }
 
-                //4. JSON 파싱
                 Reader reader = request.bufferedReader();
-                //Log.d("Reader",reader);
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
 
                 //5. 사용하기
                 Log.d("---> ResponseResult-->", result.getResult() );  // "success"? or "fail"?
 
-               /* Log.d("---> guestbook", result.getMessage() );*/
-
-               /* Log.d("---> guestbook", result.getData() );*/
                 status  = result.getResult();
+                chechSuccess(status);
+
                 return result.getResult();
             } catch (Exception e3) {
                 e3.printStackTrace();
@@ -226,18 +210,15 @@ public class JoinActivity extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-// JSON 결과확인
-
+        // JSON 결과확인
             super.onPostExecute(result);
             Toast.makeText(JoinActivity.this, result, Toast.LENGTH_LONG).show();
         }
     }
 
     private void registerDevice() { //단말 등록
-
         RegisterThread registerObj = new RegisterThread();
         registerObj.start();
-
     }
 
     class RegisterThread extends Thread {
@@ -248,15 +229,10 @@ public class JoinActivity extends Activity {
                 phoneId = gcm.register(GCMInfo.PROJECT_ID);
                 println("푸시 서비스를 위해 단말을 등록했습니다.");
                 println("등록 ID : " + phoneId);
-
-                // 등록 ID 리스트에 추가 (현재는 1개만)
-                //idList.clear();
                 idList.add(phoneId);
-
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
         }
     }
 
@@ -271,11 +247,11 @@ public class JoinActivity extends Activity {
     }
 
     public void chechSuccess(String status){
-        if(status.equals("success")) {
+        if(status !=null && status.equals("success")) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
             finish();
-        }else{
+        }else if(status != null && status.equals("fail")){
             ProgressDialog dialog = null;
             dialog.dismiss();
             AlertDialog.Builder builder3 = new AlertDialog.Builder(JoinActivity.this);
@@ -287,10 +263,8 @@ public class JoinActivity extends Activity {
                     });
             AlertDialog alert = builder3.create();
             alert.show();
-            return;
-
+            //return;
         }
-
     }
     private class JSONResultString extends JSONResult<String> {
 

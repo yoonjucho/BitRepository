@@ -112,9 +112,6 @@ public class LoginActivity extends Activity {
             Bundle bundleData = new Bundle();
             bundleData.putString("ID", id);
             intent.putExtra("ID_DATA", bundleData);
-
-            Log.e("login", "!!!!!!!id" + id);
-            Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
             startActivity(intent);
             finish();
         }else if(status != null && status.equals("fail")){
