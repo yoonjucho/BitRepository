@@ -98,8 +98,6 @@ public class LoginActivity extends Activity {
                     WebTask asyncT = new WebTask();
                     asyncT.execute();
                     //Log.e("---> ", "Http Response");
-                    checkSuccess(status);
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Log.e("---> ", "Http Response Fail");
@@ -165,6 +163,7 @@ public class LoginActivity extends Activity {
                 Log.d("---> Login", result.getResult() );
 
                 status  = result.getResult();
+                checkSuccess(status);
              /*   return result.getResult()*/;
 
             } catch (Exception e3) {
