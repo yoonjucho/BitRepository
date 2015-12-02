@@ -75,7 +75,7 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 startActivity(intent2);
                 break;
             case R.id.menu03:
-                Intent intent3 = new Intent(this,DataInesertActivity.class);
+                Intent intent3 = new Intent(this,QnAActivity.class);
                 bundleData = new Bundle();
                 bundleData.putString("ID",id);
                 intent3.putExtra("ID_DATA", bundleData);

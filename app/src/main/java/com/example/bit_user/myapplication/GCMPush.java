@@ -1,11 +1,13 @@
 package com.example.bit_user.myapplication;
 
         import android.app.Activity;
+        import android.content.Context;
         import android.content.Intent;
         import android.os.AsyncTask;
         import android.os.Bundle;
         import android.os.Handler;
 
+        import android.os.PowerManager;
         import android.util.Log;
 
         import android.view.View;
@@ -124,7 +126,7 @@ public class GCMPush extends Activity {
                 JSONObject params1 = new JSONObject();
                 //params1.put("id", id);
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                //ÀÏ´Ü project_id ¸¦ º¸³»ÁÖ´Â°Å·Î ÇÔ!! °íÃÄÁà¾ßÇÔ
+                //ì¼ë‹¨ project_id ë¥¼ ë³´ë‚´ì£¼ëŠ”ê±°ë¡œ í•¨!! ê³ ì³ì¤˜ì•¼í•¨
                 params1.put("id", gcm.register(GCMInfo.PROJECT_ID));
                 Log.d("GCM Data-->", params1.toString());
 
@@ -135,9 +137,9 @@ public class GCMPush extends Activity {
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {
                     Log.e("HTTP fail-->", "Http Response Fail:" + responseCode );
-                    return "ï¿½ï¿½ï¿½ï¿½";
+                    return "ì˜¤ë¥˜";
                 }else {
-                    Log.e("HTTPRequest-->", "ï¿½ï¿½ï¿½ï¿½");
+                    Log.e("HTTPRequest-->", "ì •ìƒ");
                 }
 
 
@@ -162,7 +164,6 @@ public class GCMPush extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-        // JSON ï¿½ï¿½ï¿½È®ï¿½ï¿½
             super.onPostExecute(result);
             Toast.makeText(GCMPush.this, result, Toast.LENGTH_LONG).show();
         }
@@ -227,6 +228,7 @@ public class GCMPush extends Activity {
                 gcmMessageBuilder.collapseKey(messageCollapseKey).delayWhileIdle(true).timeToLive(TTLTime);
                 gcmMessageBuilder.addData("type","text");
                 gcmMessageBuilder.addData("command", "show");
+                gcmMessageBuilder.addData("class","gcm");
                 gcmMessageBuilder.addData("data", URLEncoder.encode(data, "UTF-8"));
 
                 Message gcmMessage = gcmMessageBuilder.build();
@@ -260,8 +262,21 @@ public class GCMPush extends Activity {
         String command = intent.getStringExtra("command");
         String type = intent.getStringExtra("type");
         String data = intent.getStringExtra("data");
-        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+"sender"+ regId);
-        //println("DATA : " + command + ", " + type + ", " + data+ "from"+ regId);
+        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data + "sender" + regId);
         messageOutput.setText("Message from [" + from + "] : " + data);
+    }
+
+    private static PowerManager.WakeLock wakeLock;
+    public static void acquire(Context context, long timeout) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(
+                PowerManager.ACQUIRE_CAUSES_WAKEUP         |
+                        PowerManager.FULL_WAKE_LOCK         |
+                        PowerManager.ON_AFTER_RELEASE
+                , context.getClass().getName());
+        if(timeout > 0)
+            wakeLock.acquire(timeout);
+        else
+            wakeLock.acquire();
     }
 }

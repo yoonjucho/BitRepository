@@ -7,34 +7,6 @@
     tools:context="com.example.bit_user.myapplication.checkUpActivity">
 
 
-    <TabHost
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/tabHost"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"></TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical">
-
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -48,20 +20,4 @@
                         android:text="시간선택"
                         android:id="@+id/button"
                         android:layout_gravity="center_horizontal" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical"></LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical"></LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
 </RelativeLayout>
