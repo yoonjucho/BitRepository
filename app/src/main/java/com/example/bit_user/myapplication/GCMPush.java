@@ -130,8 +130,6 @@ public class GCMPush extends Activity {
                 params1.put("id", gcm.register(GCMInfo.PROJECT_ID));
                 Log.d("GCM Data-->", params1.toString());
 
-
-                request.send( params1.toString() );
                 request.send( params1.toString() );
 
                 int responseCode = request.code();

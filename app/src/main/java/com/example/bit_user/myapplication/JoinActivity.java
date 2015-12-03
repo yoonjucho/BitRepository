@@ -67,7 +67,7 @@ public class JoinActivity extends Activity {
 
     public static final String TAG = "JoinActivity";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-    String requestURL = "http://192.168.1.13:8088/testserver2/list";
+    //String requestURL = "http://192.168.1.13:8088/testserver2/list";
     String id;
     String password;
     String name;
@@ -160,7 +160,7 @@ public class JoinActivity extends Activity {
 
             try {
 
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/join");
+                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/user/join");
 
                 // reiquest 설정
                 request.connectTimeout(2000).readTimeout(2000);

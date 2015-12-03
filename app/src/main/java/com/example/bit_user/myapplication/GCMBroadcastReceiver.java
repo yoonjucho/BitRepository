@@ -1,11 +1,16 @@
 package com.example.bit_user.myapplication;
 
 import java.net.URLDecoder;
+
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.os.PowerManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.app.Notification;
 import android.util.Log;
 
 /**
@@ -84,16 +89,41 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 	}
 
 	private void sendToQNAActivity(Context context, String from, String command, String type, String data) {
-			Intent intent = new Intent(context, QnAActivity.class);
-			intent.putExtra("from", from);
-			intent.putExtra("command", command);
-			intent.putExtra("type", type);
-			intent.putExtra("data", data);
-
+		/*
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
 			vibrator.vibrate(1000);
 			QnAActivity.acquire(context, 10000);
 			context.startActivity(intent);
+			*/
+
+		Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
+
+		NotificationManager mNotificationManager  =
+				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		Intent intent = new Intent(context, QnAActivity.class);
+		intent.putExtra("from", from);
+		intent.putExtra("command", command);
+		intent.putExtra("type", type);
+		intent.putExtra("data", data);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); //contentIntent?
+
+		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+				new Intent(context, QnAActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+		mBuilder.setSmallIcon(R.drawable.ic_launcher);//required
+		mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(data));
+		mBuilder.setContentTitle(from);//required
+		mBuilder.setContentText(data);//required
+		mBuilder.setTicker("tickerText");//optional
+		mBuilder.setNumber(10);//optional
+		mBuilder.setContentIntent(contentIntent);
+		mBuilder.setAutoCancel(true);
+
+		mBuilder.setContentIntent(contentIntent);
+		mNotificationManager.notify(1, mBuilder.build());
+		vibrator.vibrate(1000); //1초 동안 진동
 	}
 }
