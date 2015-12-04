@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class MenuActivity extends Activity implements  View.OnClickListener {
     String id;
@@ -39,6 +41,9 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
             return;
         }
         id = bundleData.getString("ID");
+
+        ArrayList<String> db = new ArrayList<>();
+
         Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
         System.out.print(id);
 
