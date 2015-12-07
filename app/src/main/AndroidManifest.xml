@@ -90,8 +90,11 @@
             android:name=".DataInesertActivity"
             android:label="@string/title_activity_data_inesert"></activity>
         <activity
-            android:name=".DataListActivity"
-            android:label="@string/title_activity_data_list"></activity>
+        android:name=".DataListActivity"
+        android:label="@string/title_activity_data_list"></activity>
+        <activity
+        android:name=".CreateVoteActivity"
+        android:label="@string/title_activity_create_vote"></activity>
 
         <!-- GCM 泥섎━ ?쒕퉬?? -->
         <service android:name=".GCMIntentService" />

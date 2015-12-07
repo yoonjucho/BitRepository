@@ -266,8 +266,7 @@ public class JoinActivity extends Activity {
             //return;
         }
     }
+
     private class JSONResultString extends JSONResult<String> {
-
-
     }
 }

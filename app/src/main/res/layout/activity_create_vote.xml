@@ -15,22 +15,48 @@
         android:layout_marginBottom="38dp" />
 
     <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:hint="수업선택"
+        android:textSize="16dp"
+        android:id="@+id/check_lesson_"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <FrameLayout
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:id="@+id/f1"
+        android:layout_below="@+id/check_lesson_"
+        android:layout_alignParentStart="true">
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="123dp"
+            android:id="@+id/lessonlist_vote"
+            android:layout_below="@+id/vote_title"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center_horizontal|top" />
+    </FrameLayout>
+
+    <EditText
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:hint="투표 제목"
         android:textStyle="bold"
+        android:layout_below="@+id/f1"
         android:textSize="16dp"
-        android:layout_below="@+id/imageView"
         android:id="@+id/vote_title"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_below="@+id/vote_title"
-        android:id="@+id/linear3"
         android:layout_height="wrap_content"
-        android:weightSum="1">
-
+        android:weightSum="1"
+        android:layout_below="@+id/vote_title"
+        android:id="@+id/linearLayout">
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,21 +77,27 @@
         android:layout_centerVertical="true" />
     </LinearLayout>
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linear3"
-        android:layout_above="@+id/vote_btn"
-        android:id="@+id/vote_list"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+    <FrameLayout
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/linearLayout"
+        android:id="@+id/f2"
+        android:layout_alignParentStart="true">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/vote_list"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_below="@+id/vote_title"
+            android:layout_alignParentStart="true" />
+    </FrameLayout>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="투표만들기"
+        android:layout_below="@+id/f2"
         android:id="@+id/vote_btn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

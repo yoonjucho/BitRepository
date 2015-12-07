@@ -13,5 +13,5 @@
     <Button android:id="@+id/btnEdit"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="Edit"  />
+        android:text="삭제하기"  />
 </LinearLayout>
