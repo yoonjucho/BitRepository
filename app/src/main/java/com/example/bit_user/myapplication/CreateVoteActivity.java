@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,6 +58,8 @@ public class CreateVoteActivity extends Activity {
     private CusromAdapter adapter;
     private ArrayList<VoteList> listReturn = new ArrayList<VoteList>();
 
+    String lessonName;
+    EditText check_lesson_;
     ListView lesson_list;
     Button plusButton;
     Button voteButton;
@@ -86,7 +89,7 @@ public class CreateVoteActivity extends Activity {
         this.voteView = (ListView)findViewById(R.id.vote_list);
         this.plusButton = (Button) findViewById(R.id.vote_plus_btn);
         this.voteButton = (Button) findViewById(R.id.vote_btn);
-
+        this.check_lesson_ = (EditText) findViewById(R.id.check_lesson_);
         Intent intent = getIntent();
         if (intent != null) {
             processIntent(intent);
@@ -115,6 +118,25 @@ public class CreateVoteActivity extends Activity {
 
         LessonListTask lTask = new LessonListTask();
         lTask.execute();
+
+        lesson_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                lessonName = (String) listadapter.getItem(position);
+                Toast.makeText(getBaseContext(), lessonName, Toast.LENGTH_SHORT).show();
+                /*
+                for (int i = 0; i < lessonList.size(); i++) {
+                    if (lessonName == lessonList.get(i).get("GROUP_NAME").toString()) {
+                        idList.clear();
+                        idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
+                        teacherId = lessonList.get(i).get("USER_PHONE_ID").toString();
+                    }
+                }
+                //id 등록하기
+                //registerDevice();
+                */
+                check_lesson_.setText("" + lessonName);
+            }
+        });
 
         plusButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -208,7 +230,7 @@ public class CreateVoteActivity extends Activity {
     private class LessonListTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/class/classinfo-by-teacherid");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/classname-by-teacherid");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
