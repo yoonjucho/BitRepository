@@ -2,6 +2,7 @@ package com.example.bit_user.myapplication;
 
 import java.net.URLDecoder;
 
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.os.PowerManager;
@@ -19,7 +20,33 @@ import android.util.Log;
  */
 public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 	private static final String TAG = "GCMBroadcastReceiver";
-	
+	private static PowerManager.WakeLock sCpuWakeLock;
+	private static KeyguardManager.KeyguardLock mKeyguardLock;
+	private static boolean isScreenLock;
+
+	public static void acquireCpuWakeLock(Context context) {
+		Log.e("PushWakeLock", "Acquiring cpu wake lock");
+		Log.e("PushWakeLock", "wake sCpuWakeLock = " + sCpuWakeLock);
+		if (sCpuWakeLock != null) {
+			return;
+		}
+		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		sCpuWakeLock = pm.newWakeLock(
+				PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+						PowerManager.ACQUIRE_CAUSES_WAKEUP |
+						PowerManager.ON_AFTER_RELEASE, "hello");
+		sCpuWakeLock.acquire();
+	}
+
+	public static void releaseCpuLock() {
+		Log.e("PushWakeLock", "Releasing cpu wake lock");
+		Log.e("PushWakeLock", "relase sCpuWakeLock = " + sCpuWakeLock);
+		if (sCpuWakeLock != null) {
+			sCpuWakeLock.release();
+			sCpuWakeLock = null;
+		}
+	}
+
 	@Override
 	public void onReceive(Context context, Intent intent) {		//상대방이 메시지 보낼때  intent의 부가적인 정보로 사용
 		String action = intent.getAction();
@@ -55,7 +82,6 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 				else{
 					Log.d(TAG, "GCMBoard error");
 				}
-				
 			} else {
 				Log.d(TAG, "Unknown action : " + action);
 			}
@@ -85,6 +111,7 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 			GCMPush.acquire(context, 10000);
 			context.startActivity(intent);
 	}
+
 
 	private void sendToQNAActivity(Context context, String from, String command, String type, String data) {
 		/*
@@ -119,6 +146,11 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 		mBuilder.setNumber(10);//optional
 		mBuilder.setContentIntent(contentIntent);
 		mBuilder.setAutoCancel(true);
+
+		// 잠든 단말을 깨워라.
+		acquireCpuWakeLock(context);
+		// WakeLock 해제.
+		releaseCpuLock();
 
 		mNotificationManager.notify(1, mBuilder.build());
 		vibrator.vibrate(1000); //1초 동안 진동

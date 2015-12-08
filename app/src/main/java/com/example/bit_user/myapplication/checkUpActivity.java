@@ -254,16 +254,10 @@ public class checkUpActivity extends Activity  {
                 params1.put("userId", id.toString());
                 params1.put("className",className.toString());
 
-
-
-
                 Log.d("JoinData-->", params1.toString());
-
 
                 // 요청
                 request.send(params1.toString());
-
-                // 3. 요청
 
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {
@@ -296,7 +290,6 @@ public class checkUpActivity extends Activity  {
                     datalist.add(codenum);
                     datalist.add(className);
 
-
                     Log.d("정보","ID:"+ id +",타이머:"+ timer +",인증번호:"+ codenum +",강의명:"+className);
                     Intent intent = new Intent(getBaseContext(), checkNowActivity.class);
                     Bundle bundleData = new Bundle();
@@ -326,5 +319,3 @@ public class checkUpActivity extends Activity  {
     }
 
 }
-
-

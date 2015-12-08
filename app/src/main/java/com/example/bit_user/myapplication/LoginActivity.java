@@ -54,8 +54,6 @@ public class LoginActivity extends Activity {
 
     public static final String TAG = "LoginActivity";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-    //String requestURL = "http://192.168.1.13:8088/testserver2/list";
-
     public static final String KEY_SIMPLE_DATA = "data";
 
     Button loginButton;
@@ -63,9 +61,9 @@ public class LoginActivity extends Activity {
     EditText Login_password;
     Handler handler = new Handler();
     Button joinform;
-
     String id;
     String password;
+    String position;
     String status;
 
     @Override
@@ -111,6 +109,7 @@ public class LoginActivity extends Activity {
             Intent intent = new Intent(getBaseContext(), MenuActivity.class);
             Bundle bundleData = new Bundle();
             bundleData.putString("ID", id);
+            bundleData.putString("POSITION",position);
             intent.putExtra("ID_DATA", bundleData);
             startActivity(intent);
             finish();
@@ -126,7 +125,7 @@ public class LoginActivity extends Activity {
 
             try {
                 //HttpClient client = new DefaultHttpClient();
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/login");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/loginwithusertype");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 // JSON  포맷으로 보내기  => POST 방식
@@ -156,13 +155,15 @@ public class LoginActivity extends Activity {
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
 
+                position = result.getData();
+
                 //5. 사용하기
-                Log.d("---> Login", result.getResult() );
+                Log.d("---> Login --->", result.getData() );
+                Log.d("---> Login --->", result.getResult() );
 
                 status  = result.getResult();
                 checkSuccess(status);
-             /*   return result.getResult()*/;
-
+                return result.getResult();
             } catch (Exception e3) {
                 e3.printStackTrace();
             }

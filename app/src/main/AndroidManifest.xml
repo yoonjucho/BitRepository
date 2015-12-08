@@ -21,7 +21,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--
      To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
      option is required to comply with the Google+ Sign-In developer policies
@@ -92,6 +92,9 @@
         <activity
             android:name=".DataListActivity"
             android:label="@string/title_activity_data_list"></activity>
+        <activity
+            android:name=".CreateVoteActivity"
+            android:label="@string/title_activity_create_vote"></activity>
 
         <!-- GCM 泥섎━ ?쒕퉬?? -->
         <service android:name=".GCMIntentService" />
@@ -113,6 +116,9 @@
         <activity
             android:name=".checkUpActivity"
             android:label="@string/title_activity_check_up"></activity>
+        <activity
+            android:name=".checkNowActivity"
+            android:label="@string/title_activity_check_Now"></activity>
     </application>
 
 </manifest>

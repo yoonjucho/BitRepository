@@ -94,7 +94,6 @@ public class  checkNowActivity extends Activity implements OnClickListener {
         }
     }
 
-
     private void setTimer() {
         count_timer = 0;
         if (!timer.toString().equals("")) {

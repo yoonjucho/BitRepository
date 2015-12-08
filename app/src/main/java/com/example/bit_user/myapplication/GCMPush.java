@@ -116,12 +116,10 @@ public class GCMPush extends Activity {
                 HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/phoneidlist-by-groupno");
                 request.connectTimeout(2000).readTimeout(2000);
 
-
                 request.acceptCharset("UTF-8");
                 request.acceptJson();
                 request.accept(HttpRequest.CONTENT_TYPE_JSON);
                 request.contentType( "application/json", "UTF-8" );
-
 
                 JSONObject params1 = new JSONObject();
                 //params1.put("id", id);
