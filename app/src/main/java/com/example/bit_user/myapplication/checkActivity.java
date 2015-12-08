@@ -118,6 +118,8 @@ public class checkActivity extends Activity  {
     }
 
 
+
+
     public void addList(final ArrayList<String> arrList){
         new Thread(new Runnable() {
             @Override
@@ -340,6 +342,4 @@ public class checkActivity extends Activity  {
     }
 
 }
-
-
 

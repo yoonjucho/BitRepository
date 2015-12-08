@@ -30,6 +30,7 @@ public class BoardActivity extends Activity {
         Date date = new Date();
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy.MM.dd HH:mm",java.util.Locale.getDefault());
         strDate = dateformat.format(date);
+
         content = (EditText) findViewById(R.id.board_content);
         Datepick = (TextView) findViewById(R.id.board_date);
         Datepick.setText(strDate);

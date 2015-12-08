@@ -126,7 +126,8 @@ public class LoginActivity extends Activity {
 
             try {
                 //HttpClient client = new DefaultHttpClient();
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/login");
+
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/login");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 // JSON  포맷으로 보내기  => POST 방식

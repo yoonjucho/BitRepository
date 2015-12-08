@@ -11,6 +11,7 @@ import android.view.Window;
 
 
 
+
 public class MainActivity extends Activity {
 
 
@@ -28,6 +29,6 @@ public class MainActivity extends Activity {
                 startActivity(i);
                 finish();
             }
-        }, 1000);
+        }, 3000);
     }
 }
