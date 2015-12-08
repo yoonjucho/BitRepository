@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg1"
+    tools:context="com.example.bit_user.myapplication.checkNowActivity">
+
+    <ImageView
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:background="@drawable/top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout1">
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="350dip"
+            android:layout_height="350dip"
+            android:indeterminate="false"
+            android:background="#FFD2DAE1"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="60"
+            android:progress="@integer/google_play_services_version"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="00:00"
+            android:textColor="#fff"
+            android:textSize="60dip"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="start"
+            android:id="@+id/start_btn"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="인증번호"
+        android:textSize="25dp"
+        android:id="@+id/textView5"
+        android:textIsSelectable="true"
+        android:textStyle="bold"
+        android:layout_below="@+id/layout1"
+        android:layout_centerHorizontal="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/code_num"
+        android:textSize="70dp"
+        android:textAlignment="center"
+        android:textColor="#FF73CFE1"
+        android:layout_below="@+id/textView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:textStyle="bold"
+        android:textIsSelectable="false" />
+
+
+
+
+</RelativeLayout>

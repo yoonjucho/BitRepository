@@ -116,6 +116,7 @@ public class JoinActivity extends Activity {
                 if (radioGroup == radio_position) {
                     if (isChecked == R.id.teacher) {
                         position = "teacher";
+                        Log.d(TAG, "eeeeeeeeeeeeeeeeeeee"+position);
                     } else if (isChecked == R.id.student) {
                         position = "student";
                     } else if (isChecked == R.id.employee) {
@@ -143,12 +144,23 @@ public class JoinActivity extends Activity {
                 password = Edit_password.getText().toString();
                 name = Edit_name.getText().toString();
 
-                try {
-                    WebTask asyncT = new WebTask();
-                    asyncT.execute();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Log.e("---> ", "Http Response Fail");
+                if(position.isEmpty()){
+                    Toast.makeText(JoinActivity.this, "타입을 설정해주세요.", Toast.LENGTH_LONG).show();
+                }else if(id.isEmpty()){
+                    Toast.makeText(JoinActivity.this, "id를 입력해주세요.", Toast.LENGTH_LONG).show();
+                }else if(password.isEmpty()){
+                    Toast.makeText(JoinActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
+                }else if(name.isEmpty()){
+                    Toast.makeText(JoinActivity.this, "이름을 입력해주세요.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    try {
+                        WebTask asyncT = new WebTask();
+                        asyncT.execute();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Log.e("---> ", "Http Response Fail");
+                    }
                 }
             }
         });
@@ -160,7 +172,7 @@ public class JoinActivity extends Activity {
 
             try {
 
-                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/user/join");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/join");
 
                 // reiquest 설정
                 request.connectTimeout(2000).readTimeout(2000);
@@ -175,6 +187,7 @@ public class JoinActivity extends Activity {
                 params1.put("userPassword", password);
                 params1.put("userName", name);
                 params1.put("userType",position);
+                Log.d(TAG, "ddddddddddddddddddddd"+position);
                 params1.put("phoneId",phoneId.toString());
 
                 Log.d("JoinData-->", params1.toString());
@@ -203,9 +216,7 @@ public class JoinActivity extends Activity {
             } catch (Exception e3) {
                 e3.printStackTrace();
             }
-
             return null ;
-
         }
 
         @Override
@@ -223,7 +234,6 @@ public class JoinActivity extends Activity {
 
     class RegisterThread extends Thread {
         public void run() {
-
             try {
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                 phoneId = gcm.register(GCMInfo.PROJECT_ID);
@@ -266,8 +276,7 @@ public class JoinActivity extends Activity {
             //return;
         }
     }
+
     private class JSONResultString extends JSONResult<String> {
-
-
     }
 }

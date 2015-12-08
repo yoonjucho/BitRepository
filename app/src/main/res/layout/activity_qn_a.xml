@@ -7,7 +7,6 @@
     android:background="@drawable/bg1"
 
     tools:context="com.example.bit_user.myapplication.QnAActivity">
-
     <ImageView
         android:layout_width="800dp"
         android:layout_height="wrap_content"
@@ -20,67 +19,73 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="수업선택"
+        android:hint="수업선택"
         android:id="@+id/check_lesson_qna"
         android:layout_below="@+id/imageView"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView2"
-        android:text="List"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/check_lesson_qna">
-
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:id="@+id/qna_teacher"
-        android:layout_above="@+id/textView2"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
-    </ScrollView>
+        android:layout_below="@+id/check_lesson_qna"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/linear1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/linear1"
+        android:layout_above="@+id/linear2"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="질문내용"
+        android:textSize="16dp"
         android:id="@+id/textView2"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/qna_teacher"
         android:layout_alignParentStart="true" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ask_Message"
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/textView2"
         android:text = "@string/one_more_time"
+        android:layout_below="@+id/textView2"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/scrollView2" />
+        android:layout_alignParentEnd="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/linear2"
+        android:layout_above="@+id/dd"
+        android:layout_height="wrap_content">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ppt_number"
-        android:layout_marginTop="42dp"
-        android:layout_below="@+id/ask_Message"
-        android:text = "PPT NUMBER"
+        android:hint = "PPT NUMBER"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/scrollView2" />
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="질문하기"
         android:id="@+id/ask_btn"
-        android:layout_marginTop="84dp"
-        android:layout_below="@+id/ask_Message"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/dd"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="right" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -88,8 +93,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="dd"
         android:id="@+id/dd"
-        android:layout_centerVertical="true"
-        android:layout_below="@+id/ask_btn"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
 </RelativeLayout>

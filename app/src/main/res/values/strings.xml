@@ -26,6 +26,7 @@
     <string name="title_activity_qn_a">QnAActivity</string>
     <string name="title_activity_gcm">GCMActivity</string>
     <string name="title_activity_board">BoardActivity</string>
+    <string name="title_activity_create_vote">CreateVoteActivity</string>
 
 
     <!-- Strings related to login -->

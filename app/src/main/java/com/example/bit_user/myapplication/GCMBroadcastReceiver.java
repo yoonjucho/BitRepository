@@ -15,9 +15,7 @@ import android.util.Log;
 
 /**
  * 푸시 메시지를 받는 Receiver 정의
- * 
  * @author Mike
- *
  */
 public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 	private static final String TAG = "GCMBroadcastReceiver";
@@ -110,19 +108,18 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); //contentIntent?
 
 		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-				new Intent(context, QnAActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 		mBuilder.setSmallIcon(R.drawable.ic_launcher);//required
 		mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(data));
 		mBuilder.setContentTitle(from);//required
 		mBuilder.setContentText(data);//required
-		mBuilder.setTicker("tickerText");//optional
+		mBuilder.setTicker("QnA");//optional
 		mBuilder.setNumber(10);//optional
 		mBuilder.setContentIntent(contentIntent);
 		mBuilder.setAutoCancel(true);
 
-		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(1, mBuilder.build());
 		vibrator.vibrate(1000); //1초 동안 진동
 	}

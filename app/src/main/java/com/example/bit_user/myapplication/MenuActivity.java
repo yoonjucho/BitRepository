@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 
 public class MenuActivity extends Activity implements  View.OnClickListener {
     String id;
@@ -39,6 +41,9 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
             return;
         }
         id = bundleData.getString("ID");
+
+        ArrayList<String> db = new ArrayList<>();
+
         Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
         System.out.print(id);
 
@@ -75,7 +80,7 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 startActivity(intent2);
                 break;
             case R.id.menu03:
-                Intent intent3 = new Intent(this,QnAActivity.class);
+                Intent intent3 = new Intent(this,CreateVoteActivity.class);
                 bundleData = new Bundle();
                 bundleData.putString("ID",id);
                 intent3.putExtra("ID_DATA", bundleData);
@@ -96,9 +101,5 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 startActivity(intent5);
                 break;
         }
-
-
     }
-
-
 }

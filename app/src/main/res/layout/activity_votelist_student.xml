@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.bit_user.myapplication.VoteActivity">
+
+    <ImageView
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:background="@drawable/top"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="38dp" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="투표 목록"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:layout_below="@+id/imageView"
+        android:id="@+id/textt"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        android:id="@+id/vote_list_student"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textt"
+        android:layout_above="@+id/make_vote_btn" />
+
+</RelativeLayout>
