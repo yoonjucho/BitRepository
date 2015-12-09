@@ -27,6 +27,8 @@
     <string name="title_activity_gcm">GCMActivity</string>
     <string name="title_activity_board">BoardActivity</string>
     <string name="title_activity_create_vote">CreateVoteActivity</string>
+    <string name="title_activity_votelist_teacher">VoteListTeacher</string>
+    <string name="title_activity_votelist_student">VoteListStudent</string>
 
 
     <!-- Strings related to login -->

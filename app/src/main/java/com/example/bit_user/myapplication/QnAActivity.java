@@ -120,13 +120,12 @@ public class QnAActivity extends Activity {
                 lessonName = (String) adapter.getItem(position);
                 Toast.makeText(getBaseContext(), lessonName, Toast.LENGTH_SHORT).show();
                 for (int i = 0; i < lessonList.size(); i++) {
-                    if (lessonName == lessonList.get(i).get("GROUP_NAME").toString()) {
+                    if (lessonName == lessonList.get(i).get("CLASS_NAME").toString()) {
                         idList.clear();
-                        idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
+                        //idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
                         teacherId = lessonList.get(i).get("USER_PHONE_ID").toString();
                     }
                 }
-                println("LESSON NAME111????" + lessonName);
 
                 //id 등록하기
                 registerDevice();
@@ -137,8 +136,11 @@ public class QnAActivity extends Activity {
         Button askButton = (Button) findViewById(R.id.ask_btn);
         askButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                String data = messageInput.getText().toString();
-                //pptNo = ppt_number.getText().toString();
+                data = messageInput.getText().toString();
+                pptNo = ppt_number.getText().toString();
+                DBTask dbTask = new DBTask();
+                dbTask.execute();
+
                 sendToDevice(data);
             }
         });
@@ -152,14 +154,12 @@ public class QnAActivity extends Activity {
     class RegisterThread extends Thread {
         public void run() {
             try {
-                println("\n***RegisterThread***\n");
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
                 regId = gcm.register(GCMInfo.PROJECT_ID);
+                Log.d("regId",""+regId);
 
-                println("\n***teacherId??***"+teacherId+"\n");
                 idList.clear();
                 idList.add(teacherId);
-
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -171,9 +171,7 @@ public class QnAActivity extends Activity {
 
         protected String doInBackground(String... params) {
             try {
-                println("\n***GCMTask***\n");
-
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/class/classinfo-by-userid");
+                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/class/classinfo-by-userid");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
@@ -227,7 +225,7 @@ public class QnAActivity extends Activity {
                             {
                                 Log.d("addList", "addList--------------------->" + arrList.get(i) + "arrList.size()        " + arrList.size());
                                 lessonList.add(arrList.get(i));
-                                adapter.add(arrList.get(i).get("GROUP_NAME").toString());
+                                adapter.add(arrList.get(i).get("CLASS_NAME").toString());
                             }
                         }
                     });
@@ -263,9 +261,6 @@ public class QnAActivity extends Activity {
                 params1.put("message", data);
                 params1.put("pptNo", pptNo);
                 params1.put("lesson", lessonName);
-                Time today = new Time(Time.getCurrentTimezone());
-                today.setToNow();
-                params1.put("time", today.format("%y-%m-%d %k:%M:%S"));
 
                 Log.d("GCM Data-->", params1.toString());
 
@@ -302,7 +297,6 @@ public class QnAActivity extends Activity {
     }
 
     private void sendToDevice(String data) {
-        println("\n***SendToDevice***\n");
         SendThread thread = new SendThread(data);
         thread.start();
     }
@@ -334,11 +328,9 @@ public class QnAActivity extends Activity {
                 gcmMessageBuilder.collapseKey(messageCollapseKey).delayWhileIdle(true).timeToLive(TTLTime);
                 gcmMessageBuilder.addData("type", "text");
                 gcmMessageBuilder.addData("command", "show");
-                gcmMessageBuilder.addData("class","qna");
+                gcmMessageBuilder.addData("class", "qna");
                 gcmMessageBuilder.addData("data", URLEncoder.encode(data, "UTF-8"));
 
-                println("++++++++++++++idList++++++++++++++"+idList.toString());
-                println("++++++++++++++data++++++++++++++"+msg);
                 Message gcmMessage = gcmMessageBuilder.build();
                 MulticastResult resultMessage = sender.send(gcmMessage, idList, RETRY);
 
@@ -372,9 +364,6 @@ public class QnAActivity extends Activity {
         data = intent.getStringExtra("data");
         Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+"sender"+ regId);
 
-        DBTask dbTask = new DBTask();
-        dbTask.execute();
-
         dd.setText("Message from [" + from + "] : " + data);
     }
 
@@ -388,6 +377,7 @@ public class QnAActivity extends Activity {
         });
     }
 
+    /*
     private static PowerManager.WakeLock wakeLock;
     public static void acquire(Context context, long timeout) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -401,4 +391,5 @@ public class QnAActivity extends Activity {
         else
             wakeLock.acquire();
     }
+    */
 }

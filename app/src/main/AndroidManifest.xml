@@ -95,6 +95,12 @@
         <activity
             android:name=".CreateVoteActivity"
             android:label="@string/title_activity_create_vote"></activity>
+        <activity
+            android:name=".VoteListTeacher"
+            android:label="@string/title_activity_votelist_teacher"></activity>
+        <activity
+            android:name=".VoteListStudent"
+            android:label="@string/title_activity_votelist_student"></activity>
 
         <!-- GCM 泥섎━ ?쒕퉬?? -->
         <service android:name=".GCMIntentService" />

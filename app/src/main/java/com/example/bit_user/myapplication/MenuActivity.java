@@ -96,7 +96,7 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 break;
             case R.id.menu03: //투표하기
                 if(position.equals("teacher")) {
-                    Intent intent31 = new Intent(this,CreateVoteActivity.class);
+                    Intent intent31 = new Intent(this,VoteListTeacher.class);
                     bundleData = new Bundle();
                     bundleData.putString("ID",id);
                     intent31.putExtra("ID_DATA", bundleData);

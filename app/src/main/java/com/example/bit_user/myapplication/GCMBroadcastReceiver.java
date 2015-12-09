@@ -123,7 +123,6 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 			*/
 
 		Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
-
 		NotificationManager mNotificationManager  =
 				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -146,6 +145,9 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 		mBuilder.setNumber(10);//optional
 		mBuilder.setContentIntent(contentIntent);
 		mBuilder.setAutoCancel(true);
+
+		//Notification noti = mBuilder.build();
+		//noti.defaults |= Notification.DEFAULT_VIBRATE;
 
 		// 잠든 단말을 깨워라.
 		acquireCpuWakeLock(context);

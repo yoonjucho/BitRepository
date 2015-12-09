@@ -149,7 +149,6 @@ public class CreateVoteActivity extends Activity {
             public void onClick(View v) {
                 //디비에 추가하기
                 voteTitle = title.getText().toString();
-
                 DBTask dTask = new DBTask();
                 dTask.execute();
 
