@@ -15,102 +15,96 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="38dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:hint="수업선택"
+        android:textSize="16dp"
+        android:id="@+id/check_lesson_notice"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/Fl1"
-        android:layout_below="@+id/imageView">
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:id="@+id/qna_teacher"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/linear1" />
+        android:id="@+id/ff1"
+        android:layout_below="@+id/check_lesson_notice">
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:id="@+id/lesson_list_notice_teacher"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/linear1" />
     </FrameLayout>
 
     <LinearLayout
+        android:layout_marginTop="15dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:id="@+id/linear2"
-        android:layout_below="@+id/Fl1"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/QnA_lesson"
-            android:text = "수업 이름"
-            android:textSize="16dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_weight="1" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/QnA_name"
-            android:text = "질문자 이름"
-            android:textSize="16dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:id="@+id/linear3"
-        android:layout_below="@+id/linear2"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ppt_number"
-            android:text = "PPT NUMBER"
-            android:textSize="16dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_weight="1" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/qnaTime"
-            android:text = "qna Time"
-            android:textSize="16dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_weight="1" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/linear3"
-        android:id="@+id/linear1"
-        android:layout_height="wrap_content"
+        android:id="@+id/linear7"
+        android:layout_below="@+id/ff1"
+        android:layout_height="35dp"
         android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="질문내용"
+            android:text="공지제목"
+            android:textSize="16dp"
+            android:id="@+id/textView7"
+            android:layout_below="@+id/qna_teacher"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/notice_Title"
+            android:hint = "제목"
+            android:textSize="16dp"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/linear1"
+        android:layout_below="@+id/linear7"
+        android:layout_height="130dp"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="공지내용"
             android:textSize="16dp"
             android:id="@+id/textView2"
             android:layout_below="@+id/qna_teacher"
             android:layout_alignParentStart="true" />
 
-        <TextView
+        <EditText
             android:layout_width="match_parent"
-            android:layout_height="132dp"
-            android:id="@+id/ask_Message"
-            android:text = "@string/one_more_time"
+            android:layout_height="match_parent"
+            android:id="@+id/notice_Message"
+            android:hint = "오늘 휴강입니다."
             android:layout_below="@+id/textView2"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true" />
     </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="공지하기"
+            android:layout_below="@+id/linear1"
+            android:id="@+id/make_notice_button"
+            android:layout_weight="5"
+            android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

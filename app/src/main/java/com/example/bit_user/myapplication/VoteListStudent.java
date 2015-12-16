@@ -53,34 +53,24 @@ public class VoteListStudent extends Activity {
 
     public ArrayList<Map> arrayList = new ArrayList<Map>();
     public ArrayList<String> voteList = new ArrayList<String>();
-
     private CusromAdapter adapter;
-
     private ArrayList<Map> listReturn = new ArrayList<Map>();
 
-    String lessonName;
-    EditText check_lesson_;
-    ListView voteListTeacher;
-    Button makeButton;
+    public double voteNumber;
+
+    ListView voteListStudent;
     String id;
     Sender sender;
     private ListView voteView;
-
     String status;
-    Handler handler = new Handler();
-    private Random random ;
-    private int TTLTime = 60;
-    private	int RETRY = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_vote);
+        setContentView(R.layout.activity_votelist_student);
 
         this.sender = new Sender(GCMInfo.GOOGLE_API_KEY);
-        this.voteListTeacher = (ListView)findViewById(R.id.vote_list_teacher);
-        this.makeButton = (Button) findViewById(R.id.make_vote_btn);
-        this.check_lesson_ = (EditText) findViewById(R.id.check_lesson_);
+        this.voteListStudent = (ListView)findViewById(R.id.vote_list_student);
 
         Intent intent = getIntent();
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
@@ -93,19 +83,12 @@ public class VoteListStudent extends Activity {
         Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
 
         adapter = new CusromAdapter(this, 0, listReturn );
-        voteListTeacher.setAdapter(adapter);
-        voteListTeacher.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        voteListStudent.setAdapter(adapter);
+        voteListStudent.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         this.adapter.notifyDataSetChanged();
 
         LessonListTask lTask = new LessonListTask();
         lTask.execute();
-
-        makeButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                //디비에 추가하기
-
-            }
-        });
     }
 
     private class CusromAdapter extends ArrayAdapter<Map>
@@ -124,55 +107,50 @@ public class VoteListStudent extends Activity {
             if( null == v)
             {
                 LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.vote_list_teacher, null);
+                v = vi.inflate(R.layout.student_votelist_items, null);
             }
 
-            TextView vote_number_teacher = (TextView)v.findViewById(R.id.vote_number_teacher);
-            TextView lesson_name_teacher = (TextView)v.findViewById(R.id.lesson_name_teacher);
-            TextView vote_title_teacher = (TextView)v.findViewById(R.id.vote_title_teacher);
-            TextView vote_time_teacher = (TextView)v.findViewById(R.id.vote_time_teacher);
+            TextView lesson_name_student = (TextView)v.findViewById(R.id.votelist_lesson_name);
+            TextView vote_title_student = (TextView)v.findViewById(R.id.votelist_vote_title);
+            TextView vote_time_student = (TextView)v.findViewById(R.id.votelist_vote_time);
 
-            Button click_vote_teacher = (Button)v.findViewById(R.id.click_vote_teacher);
-            Button remove_vote_teacher = (Button)v.findViewById(R.id.remove_vote_teacher);
+            Button vote_student = (Button)v.findViewById(R.id.btnVote);
 
             Map dataItem = m_listItem.get(position);
-            vote_number_teacher.setText(dataItem.get("voteNumber").toString());
-            lesson_name_teacher.setText(dataItem.get("className").toString());
-            vote_title_teacher.setText(dataItem.get("voteTitle").toString());
-            vote_time_teacher.setText(dataItem.get("createdDate").toString());
+            lesson_name_student.setText(dataItem.get("className").toString());
+            vote_title_student.setText(dataItem.get("voteTitle").toString());
+            vote_time_student.setText(dataItem.get("createdDate").toString());
 
-            click_vote_teacher.setTag(position);
-            click_vote_teacher.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //그 화면으로 보내기
-                }
-            });
-
-            remove_vote_teacher.setTag(position);
-            remove_vote_teacher.setOnClickListener(new View.OnClickListener() {
+            vote_student.setTag(position);
+            vote_student.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     LinearLayout itemParent = (LinearLayout)v.getParent();
                     int nPosition = (int) v.getTag();
-                    VoteListStudent.this.RemoveData(nPosition);
+                    VoteListStudent.this.goNext(nPosition);
+
+                    Intent gointent = new Intent(getBaseContext(),doVoteActivity.class);
+                    Bundle bundleData = new Bundle();
+                    bundleData.putString("ID", id);
+                    bundleData.putDouble("VOTENUMBER",voteNumber);
+                    gointent.putExtra("ID_DATA", bundleData);
+                    startActivity(gointent);
+                    finish();
                 }
             });
-
             return v;
         }
-
     }//end class CusromAdapter
 
-    public void RemoveData(int nPosition)
+    public void goNext(int nPosition)
     {
-        this.adapter.remove(this.listReturn.get(nPosition));
+        voteNumber =(double) listReturn.get(nPosition).get("voteNumber");
     }
 
     private class LessonListTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/classname-by-teacherid");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/vote/list");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");

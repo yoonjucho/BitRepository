@@ -4,39 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        >
-
-    <TextView android:id="@+id/lesson_name_teacher"
-        android:text="lesson"
+    <TextView android:id="@+id/qnalist_lessonname"
+        android:text="수업이름"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <TextView android:id="@+id/vote_title_teacher"
-        android:text="title"
+    <TextView android:id="@+id/qnalist_studentname"
+        android:text="질문자이름"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <TextView android:id="@+id/vote_time_teacher"
-        android:text="time"
+    <TextView android:id="@+id/qnalist_pptnumber"
+        android:text="ppt넘버"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
-    </LinearLayout>
 
-    <Button android:id="@+id/click_vote_teacher"
+    <Button android:id="@+id/qnalist_check_qna"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:text="투표현황"  />
+        android:text="쪽지확인"  />
 
-    <Button android:id="@+id/remove_vote_teacher"
+    <Button android:id="@+id/qnalist_remove_btn"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="삭제"  />
-
 </LinearLayout>

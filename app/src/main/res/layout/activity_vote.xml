@@ -19,15 +19,14 @@
             android:layout_width="match_parent"
             android:text="투표 제목"
             android:textStyle="bold"
-            android:textSize="16dp"
             android:layout_below="@+id/imageView"
             android:id="@+id/vote_title"/>
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="투표선택"
+        android:hint="투표제목"
         android:id="@+id/check_vote"
         android:layout_below="@+id/vote_title"
         android:layout_alignParentStart="true"

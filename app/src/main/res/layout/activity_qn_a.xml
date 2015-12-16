@@ -15,7 +15,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="38dp" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -25,19 +25,26 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ff1"
+        android:layout_below="@+id/check_lesson_qna">
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="500dp"
+        android:layout_height="150dp"
         android:id="@+id/qna_teacher"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/check_lesson_qna"
         android:layout_alignParentEnd="true"
         android:layout_above="@+id/linear1" />
+    </FrameLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:id="@+id/linear1"
+        android:layout_below="@+id/ff1"
         android:layout_above="@+id/linear2"
         android:layout_height="wrap_content"
         android:weightSum="1">
@@ -54,7 +61,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/ask_Message"
         android:text = "@string/one_more_time"
         android:layout_below="@+id/textView2"
@@ -69,11 +76,22 @@
         android:layout_above="@+id/dd"
         android:layout_height="wrap_content">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="ppt번호"
+            android:textSize="16dp"
+            android:layout_weight="1"
+            android:layout_below="@+id/qna_teacher"
+            android:layout_alignParentStart="true" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ppt_number"
         android:hint = "PPT NUMBER"
+        android:layout_weight="1"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
@@ -82,9 +100,9 @@
         android:layout_height="wrap_content"
         android:text="질문하기"
         android:id="@+id/ask_btn"
+        android:layout_weight="5"
         android:layout_above="@+id/dd"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="right" />
+        android:layout_centerHorizontal="true" />
     </LinearLayout>
 
     <TextView

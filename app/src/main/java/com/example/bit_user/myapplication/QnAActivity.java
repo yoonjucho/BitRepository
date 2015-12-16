@@ -62,7 +62,7 @@ public class QnAActivity extends Activity {
     TextView dd;
     Sender sender;
     String lessonName;
-    EditText check_lesson;
+    TextView check_lesson;
     String regId;
     String status;
     String data;
@@ -101,7 +101,7 @@ public class QnAActivity extends Activity {
         dd.setText("dd");
 
         check_list=(ListView)findViewById(R.id.qna_teacher);
-        check_lesson=(EditText)findViewById(R.id.check_lesson_qna);
+        check_lesson=(TextView)findViewById(R.id.check_lesson_qna);
 
         arrayList =new ArrayList<String>();
         arrayList.add(getString(R.string.lessonCheck));
@@ -171,7 +171,7 @@ public class QnAActivity extends Activity {
 
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/class/classinfo-by-userid");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/class/classinfo-by-userid");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
@@ -247,7 +247,7 @@ public class QnAActivity extends Activity {
 
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/qna/create-q");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/qna/create-q");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");

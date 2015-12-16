@@ -76,6 +76,10 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 					Log.d(TAG, "GCMBoard qna");
 					sendToQNAActivity(context, from, command, type, data);
 				}
+				else if(thisClass.contains("notice")){
+					Log.d(TAG, "GCMBoard notice");
+					sendToNOTICEActivity(context, from, command, type, data);
+				}
 				else if(thisClass == null){
 					Log.d(TAG, "GCMBoard null");
 				}
@@ -112,6 +116,19 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 			context.startActivity(intent);
 	}
 
+	private void sendToNOTICEActivity(Context context, String from, String command, String type, String data) {
+		Intent intent = new Intent(context, GCMPush.class);
+		intent.putExtra("from", from);
+		intent.putExtra("command", command);
+		intent.putExtra("type", type);
+		intent.putExtra("data", data);
+
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
+		vibrator.vibrate(1000);
+		GCMPush.acquire(context, 10000);
+		context.startActivity(intent);
+	}
 
 	private void sendToQNAActivity(Context context, String from, String command, String type, String data) {
 		/*

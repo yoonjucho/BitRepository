@@ -47,36 +47,38 @@ import java.util.Random;
 
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
-public class VoteListTeacher extends Activity {
-    public static final String TAG = "VoteListTeacher";
+public class doVoteActivity extends Activity {
+    public static final String TAG = "doVoteActivity";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-    public ArrayList<Map> arrayList = new ArrayList<Map>();
-    public ArrayList<Map> voteList = new ArrayList<Map>();
-    private CusromAdapter adapter;
-    private ArrayList<Map> listReturn = new ArrayList<Map>();
-    public double removeNumber;
 
-    ListView VotelistTeacher;
-    Button makeButton;
-    String id;
-    Sender sender;
+    public ArrayList<String> voteList = new ArrayList<String>();
+    public ArrayList<String> arrayList = new ArrayList<String>();
+    public ArrayAdapter<String> listadapter;
+
+    private ArrayList<VoteList> listReturn = new ArrayList<VoteList>();
+
+    TextView voteTitle;
+    TextView checkVote;
+    ListView checkList;
+    Button voteButton;
 
     String status;
-    Handler handler = new Handler();
-    private Random random ;
-    private int TTLTime = 60;
-    private	int RETRY = 3;
+    public String checkedVote;
+    public String id;
+    public double voteNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_votelist_teacher);
+        setContentView(R.layout.activity_vote);
 
-        this.sender = new Sender(GCMInfo.GOOGLE_API_KEY);
-        this.VotelistTeacher = (ListView)findViewById(R.id.vote_list_teacher);
-        this.makeButton = (Button) findViewById(R.id.make_vote_btn);
+        this.voteTitle = (TextView) findViewById(R.id.vote_title);
+        this.checkVote = (TextView) findViewById(R.id.check_vote);
+        this.checkList = (ListView)findViewById(R.id.vote_list);
+        this.voteButton = (Button) findViewById(R.id.vote_btn);
 
         Intent intent = getIntent();
+
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
         if(bundleData == null){
             Toast.makeText(this, "Bundle data is null!",Toast.LENGTH_LONG).show();
@@ -84,19 +86,32 @@ public class VoteListTeacher extends Activity {
         }
 
         id = bundleData.getString("ID");
-        Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
+        voteNumber = bundleData.getDouble("VOTENUMBER");
 
-        adapter = new CusromAdapter(this, 0, listReturn );
-        this.VotelistTeacher.setAdapter(adapter);
-        VotelistTeacher.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        this.adapter.notifyDataSetChanged();
+        listadapter= new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1,arrayList);
+        checkList.setAdapter(listadapter);
+        checkList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        LessonListTask lTask = new LessonListTask();
-        lTask.execute();
+        VoteTask vTask = new VoteTask();
+        vTask.execute();
 
-        makeButton.setOnClickListener(new OnClickListener() {
+        checkList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                checkedVote = (String) listadapter.getItem(position);
+                Toast.makeText(getBaseContext(), checkedVote, Toast.LENGTH_SHORT).show();
+                checkVote.setText("" + checkedVote);
+            }
+        });
+
+        voteButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Intent gointent = new Intent(getBaseContext(),CreateVoteActivity.class);
+                //디비에 추가하기
+
+                DBTask dTask = new DBTask();
+                dTask.execute();
+
+                Intent gointent = new Intent(getBaseContext(),VoteListStudent.class);
                 Bundle bundleData = new Bundle();
                 bundleData.putString("ID", id);
                 gointent.putExtra("ID_DATA", bundleData);
@@ -106,87 +121,10 @@ public class VoteListTeacher extends Activity {
         });
     }
 
-    private class CusromAdapter extends ArrayAdapter<Map>
-    {
-        private ArrayList<Map> m_listItem;
-
-        public CusromAdapter(Context context, int textViewResourceId, ArrayList<Map> objects )
-        {
-            super(context, textViewResourceId, objects);
-            this.m_listItem = objects;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            View v = convertView;
-            if( null == v)
-            {
-                LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.vote_list_teacher, null);
-            }
-
-            TextView lesson_name_teacher = (TextView)v.findViewById(R.id.lesson_name_teacher);
-            TextView vote_title_teacher = (TextView)v.findViewById(R.id.vote_title_teacher);
-            TextView vote_time_teacher = (TextView)v.findViewById(R.id.vote_time_teacher);
-
-            Button click_vote_teacher = (Button)v.findViewById(R.id.click_vote_teacher);
-            Button remove_vote_teacher = (Button)v.findViewById(R.id.remove_vote_teacher);
-
-            Map dataItem = m_listItem.get(position);
-            lesson_name_teacher.setText(dataItem.get("className").toString());
-            vote_title_teacher.setText(dataItem.get("voteTitle").toString());
-            vote_time_teacher.setText(dataItem.get("createdDate").toString());
-
-            click_vote_teacher.setTag(position);
-            click_vote_teacher.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //그 화면으로 보내기
-                }
-            });
-
-            remove_vote_teacher.setTag(position);
-            remove_vote_teacher.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LinearLayout itemParent = (LinearLayout)v.getParent();
-                    int nPosition = (int) v.getTag();
-                    VoteListTeacher.this.RemoveData(nPosition);
-                }
-            });
-            return v;
-        }
-    }//end class CusromAdapter
-
-    public void RemoveData(int nPosition)
-    {
-
-        String name = listReturn.get(nPosition).get("className").toString();
-        String title = listReturn.get(nPosition).get("voteTitle").toString();
-        String time = listReturn.get(nPosition).get("createdDate").toString();
-
-        for (int i = 0; i < voteList.size(); i++) {
-            if (name == voteList.get(i).get("className").toString()) {
-                if (title == voteList.get(i).get("voteTitle").toString()) {
-                    if (time == voteList.get(i).get("createdDate").toString()) {
-                        removeNumber =(double)  voteList.get(i).get("voteNumber");
-                    }
-                }
-            }
-        }
-
-        this.adapter.remove(this.listReturn.get(nPosition));
-
-        RemoveTask rTask = new RemoveTask();
-        rTask.execute();
-        //어댑터 초기화
-        this.adapter.notifyDataSetChanged();
-    }
-
-    private class LessonListTask extends AsyncTask<String, Void, String> {
+    private class VoteTask extends AsyncTask<String, Void, String> {
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/vote/list");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/vote/votelistbyvoteno");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
@@ -195,7 +133,7 @@ public class VoteListTeacher extends Activity {
                 request.contentType("application/json", "UTF-8");
 
                 JSONObject params1 = new JSONObject();
-                params1.put("userId", id);
+                params1.put("voteNumber",voteNumber);
                 Log.d("LessonList Data-->", params1.toString());
 
                 request.send(params1.toString());
@@ -224,11 +162,11 @@ public class VoteListTeacher extends Activity {
             return null;
         }
 
-        public ArrayList<Map> addAdapter(ArrayList<Map> arrayList) {
+        public ArrayList<String> addAdapter(ArrayList<String> arrayList) {
             return null;
         }
 
-        public void addList(final ArrayList<Map> arrList) {
+        public void addList(final ArrayList<String> arrList) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -238,7 +176,7 @@ public class VoteListTeacher extends Activity {
                             for (int i = 0; i < arrList.size(); i++) {
                                 Log.d("addList", "addList--------------------->" + arrList.get(i) + "arrList.size()        " + arrList.size());
                                 voteList.add(arrList.get(i));
-                                adapter.add(arrList.get(i));
+                                listadapter.add(arrList.get(i));
                             }
                         }
                     });
@@ -246,14 +184,15 @@ public class VoteListTeacher extends Activity {
             }).start();
         }
 
-        private class JSONResultString extends JSONResult<ArrayList<Map>> {
+        private class JSONResultString extends JSONResult<ArrayList<String>> {
         }
     }
 
-    private class RemoveTask extends AsyncTask<String, Void, String> {
+    private class DBTask extends AsyncTask<String, Void, String> {
+
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/vote/delete");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/vote/voting");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
@@ -262,9 +201,11 @@ public class VoteListTeacher extends Activity {
                 request.contentType("application/json", "UTF-8");
 
                 JSONObject params1 = new JSONObject();
-                params1.put("voteNumber",removeNumber);
-                removeNumber = 0; // initailize
-                Log.d("LessonList Data-->", params1.toString());
+                params1.put("userId", id);
+                params1.put("voteNumber",voteNumber);
+                params1.put("voteContent", checkedVote);
+
+                Log.d("GCM Data-->", params1.toString());
 
                 request.send(params1.toString());
 
@@ -289,7 +230,8 @@ public class VoteListTeacher extends Activity {
             return null;
         }
 
-        private class JSONResultString extends JSONResult<ArrayList<Map>> {
+        private class JSONResultString extends JSONResult<ArrayList<String>> {
         }
+
     }
 }

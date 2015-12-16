@@ -102,6 +102,17 @@
             android:name=".VoteListStudent"
             android:label="@string/title_activity_votelist_student"></activity>
 
+        <activity
+            android:name=".doVoteActivity"
+            android:label="@string/title_activity_do_vote"></activity>
+
+        <activity
+            android:name=".NoticeTeacherActivity"
+            android:label="@string/title_activity_notice_teacher"></activity>
+        <activity
+            android:name=".MessageTeacher"
+            android:label="@string/title_activity_message_teacher"></activity>
+
         <!-- GCM 泥섎━ ?쒕퉬?? -->
         <service android:name=".GCMIntentService" />
 

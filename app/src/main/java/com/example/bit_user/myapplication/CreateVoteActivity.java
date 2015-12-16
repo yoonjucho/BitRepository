@@ -62,7 +62,7 @@ public class CreateVoteActivity extends Activity {
 
     String voteTitle;
     String lessonName;
-    EditText check_lesson_;
+    TextView check_lesson_;
     ListView lesson_list;
     Button plusButton;
     Button voteButton;
@@ -92,7 +92,7 @@ public class CreateVoteActivity extends Activity {
         this.voteView = (ListView)findViewById(R.id.vote_list);
         this.plusButton = (Button) findViewById(R.id.vote_plus_btn);
         this.voteButton = (Button) findViewById(R.id.vote_btn);
-        this.check_lesson_ = (EditText) findViewById(R.id.check_lesson_);
+        this.check_lesson_ = (TextView) findViewById(R.id.check_lesson_);
         Intent intent = getIntent();
         if (intent != null) {
             processIntent(intent);
@@ -152,7 +152,12 @@ public class CreateVoteActivity extends Activity {
                 DBTask dTask = new DBTask();
                 dTask.execute();
 
-                //sendToDevice(data);
+                Intent gointent = new Intent(getBaseContext(),VoteListTeacher.class);
+                Bundle bundleData = new Bundle();
+                bundleData.putString("ID", id);
+                gointent.putExtra("ID_DATA", bundleData);
+                startActivity(gointent);
+                finish();
             }
         });
     }

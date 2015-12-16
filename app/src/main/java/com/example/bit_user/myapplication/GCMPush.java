@@ -138,7 +138,6 @@ public class GCMPush extends Activity {
                     Log.e("HTTPRequest-->", "정상");
                 }
 
-
                 Reader reader = request.bufferedReader();
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
@@ -212,7 +211,6 @@ public class GCMPush extends Activity {
         public void sendText(String msg)
                 throws Exception
         {
-
             if( random == null){
                 random = new Random(System.currentTimeMillis());
             }

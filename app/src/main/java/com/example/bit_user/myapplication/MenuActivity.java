@@ -80,7 +80,7 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 break;
             case R.id.menu02: //출석체크
                 if(position.equals("teacher")) {
-                    Intent intent21 = new Intent(this,GCMPush.class);
+                    Intent intent21 = new Intent(this,checkUpActivity.class);
                     bundleData = new Bundle();
                     bundleData.putString("ID",id);
                     intent21.putExtra("ID_DATA", bundleData);
@@ -112,7 +112,7 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 break;
             case R.id.menu04: //쪽지보내기
                 if(position.equals("teacher")) {
-                    Intent intent41 = new Intent(this,QnAActivity.class);
+                    Intent intent41 = new Intent(this,MessageTeacher.class);
                     bundleData = new Bundle();
                     bundleData.putString("ID",id);
                     intent41.putExtra("ID_DATA", bundleData);
@@ -128,19 +128,36 @@ public class MenuActivity extends Activity implements  View.OnClickListener {
                 break;
             case R.id.menu05: //공지사항
                 if(position.equals("teacher")) {
-
+                    Intent intent51 = new Intent(this,NoticeTeacherActivity.class);
+                    bundleData = new Bundle();
+                    bundleData.putString("ID",id);
+                    intent51.putExtra("ID_DATA", bundleData);
+                    startActivity(intent51);
                 }
                 else if (position.equals("student")) {
-
+                    Intent intent52 = new Intent(this,NoticeStudentActivity.class);
+                    bundleData = new Bundle();
+                    bundleData.putString("ID",id);
+                    intent52.putExtra("ID_DATA", bundleData);
+                    startActivity(intent52);
                 }
+
                 break;
             case R.id.menu06: //마이페이지
+                Intent intent61 = new Intent(this,MypageActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                intent61.putExtra("ID_DATA", bundleData);
+                startActivity(intent61);
+
+                /*
                 if(position.equals("teacher")) {
 
                 }
                 else if (position.equals("student")) {
 
                 }
+                */
                 break;
             default:
                 break;
