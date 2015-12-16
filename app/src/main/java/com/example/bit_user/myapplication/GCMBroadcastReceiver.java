@@ -117,6 +117,7 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 	}
 
 	private void sendToNOTICEActivity(Context context, String from, String command, String type, String data) {
+		/*
 		Intent intent = new Intent(context, GCMPush.class);
 		intent.putExtra("from", from);
 		intent.putExtra("command", command);
@@ -128,6 +129,7 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 		vibrator.vibrate(1000);
 		GCMPush.acquire(context, 10000);
 		context.startActivity(intent);
+		*/
 	}
 
 	private void sendToQNAActivity(Context context, String from, String command, String type, String data) {

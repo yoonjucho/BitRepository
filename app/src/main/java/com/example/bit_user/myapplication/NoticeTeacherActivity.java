@@ -58,7 +58,7 @@ public class NoticeTeacherActivity extends Activity {
     EditText noticeMessage;
     Button makeNoticeButton;
 
-    int lessonNumber;
+    Double lessonNumber;
     String lessonName;
     String title;
 
@@ -96,6 +96,7 @@ public class NoticeTeacherActivity extends Activity {
 
         checkLessonNotice = (TextView)findViewById(R.id.check_lesson_notice);
         check_list=(ListView)findViewById(R.id.lesson_list_notice_teacher);
+        noticeTitle = (EditText)findViewById(R.id.notice_Title);
         noticeMessage = (EditText)findViewById(R.id.notice_Message);
         makeNoticeButton = (Button)findViewById(R.id.make_notice_button);
 
@@ -147,11 +148,11 @@ public class NoticeTeacherActivity extends Activity {
 
                 for (int i = 0; i < lessonList.size(); i++) {
                     if (lessonName == lessonList.get(i).get("CLASS_NAME").toString()) {
-                        idList.clear();
                         //idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
-                        idList = (ArrayList)lessonList.get(i).get("USER_PHONE_ID");
+                        idList = (ArrayList)lessonList.get(i).get("PHONE_ID_LIST");
                         println("ID LIST !!!!!!!!!!!!!!!! "+idList.toString());
-                        lessonNumber = Integer.valueOf(lessonList.get(i).get("CLASS_NO").toString());
+                        lessonNumber = Double.valueOf(lessonList.get(i).get("CLASS_NO").toString());
+                        println("!!!!!!!!!!!!!!"+lessonNumber);
                     }
                 }
 
@@ -241,7 +242,7 @@ public class NoticeTeacherActivity extends Activity {
 
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/qna/create-q");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/notice/insert");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
@@ -250,15 +251,15 @@ public class NoticeTeacherActivity extends Activity {
                 request.contentType("application/json", "UTF-8");
 
                 JSONObject params1 = new JSONObject();
-                params1.put("teacherId", id);
-                params1.put("lessonName", lessonName);
-                params1.put("lessonNumber", lessonNumber);
+                params1.put("userId", id);
+                params1.put("className", lessonName);
+                params1.put("classNo", lessonNumber);
                 params1.put("message", data);
                 params1.put("title", title);
 
-                Log.d("GCM Data-->", params1.toString());
-
                 request.send(params1.toString());
+
+                Log.d("GCM Data-->", params1.toString());
 
                 int responseCode = request.code();
                 if (HttpURLConnection.HTTP_OK != responseCode) {

@@ -113,6 +113,10 @@
             android:name=".MessageTeacher"
             android:label="@string/title_activity_message_teacher"></activity>
 
+        <activity
+            android:name=".NoticeStudentActivity"
+            android:label="@string/title_activity_notice_student"></activity>
+
         <!-- GCM 泥섎━ ?쒕퉬?? -->
         <service android:name=".GCMIntentService" />
 
