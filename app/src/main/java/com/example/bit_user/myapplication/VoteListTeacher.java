@@ -6,33 +6,21 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.os.PowerManager;
-import android.text.format.Time;
 import android.util.Log;
-
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.bit_user.myapllication.core.JSONResult;
 import com.github.kevinsawicki.http.HttpRequest;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Sender;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -40,7 +28,6 @@ import org.json.JSONObject;
 
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -141,7 +128,16 @@ public class VoteListTeacher extends Activity {
             click_vote_teacher.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //그 화면으로 보내기
+                    LinearLayout itemParent = (LinearLayout)v.getParent();
+                    int nPosition = (int) v.getTag();
+
+                    Intent gointent = new Intent(getBaseContext(),VoteResultActivity.class);
+                    Bundle bundleData = new Bundle();
+                    bundleData.putString("ID", id);
+                    bundleData.putDouble("VOTENUMBER",(Double) voteList.get(nPosition).get("voteNumber"));
+                    gointent.putExtra("ID_DATA", bundleData);
+                    startActivity(gointent);
+                    finish();
                 }
             });
 
