@@ -131,7 +131,7 @@ public class VoteListTeacher extends Activity {
                     LinearLayout itemParent = (LinearLayout)v.getParent();
                     int nPosition = (int) v.getTag();
 
-                    Intent gointent = new Intent(getBaseContext(),VoteResultActivity.class);
+                    Intent gointent = new Intent(getBaseContext(), VoteResultActivity.class);
                     Bundle bundleData = new Bundle();
                     bundleData.putString("ID", id);
                     bundleData.putDouble("VOTENUMBER",(Double) voteList.get(nPosition).get("voteNumber"));
