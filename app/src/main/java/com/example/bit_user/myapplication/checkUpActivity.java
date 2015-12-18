@@ -53,12 +53,15 @@ public class checkUpActivity extends Activity  {
     String className;
     String codenum;
     String timer;
-    TextView check_date;
+    String classNo;
+    TextView check_day;
+    TextView check_time;
     EditText count_timer;
     Spinner lesson_list;
     Button check_up_btn;
     TextView select_lesson;
-    String strDate;
+    String strDay;
+    String strTime;
 
 
     @Override
@@ -85,35 +88,37 @@ public class checkUpActivity extends Activity  {
         count_timer = (EditText) findViewById(R.id.count_timer);
         check_up_btn = (Button) findViewById(R.id.check_up_Btn);
         select_lesson = (TextView) findViewById(R.id.select_lesson);
-        check_date = (TextView)findViewById(R.id.check_date);
+        check_day = (TextView) findViewById(R.id.check_day);
+        check_time = (TextView) findViewById(R.id.check_time);
 
         Date date = new Date();
-        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy.MM.dd/HH:mm",java.util.Locale.getDefault());
-        strDate = dateformat.format(date);
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy.MM.dd", java.util.Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
 
-        check_date.setText(strDate);
+        strTime = dateFormat.format(date);
+        strDay = dateformat.format(date);
 
+
+        check_day.setText(strDay);
+        check_time.setText("TIME" + strTime);
 
 
         arrayList = new ArrayList<String>();
-        arrayList.add("ss");
         adapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, arrayList);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        lesson_list.setAdapter(adapter);
-        lesson_list.setPrompt("강의");
+        setListViewData();
 
+        lesson_list.setPrompt("강의");
         lesson_list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                LessonListTask lessonListTask = new LessonListTask();
-                lessonListTask.execute();
-                className =(String)adapter.getItem(position);
-                Toast.makeText(getBaseContext(),className,Toast.LENGTH_SHORT).show();
-                select_lesson.setText(""+className);
-              //  refresh  refresh
+
+                className = (String) adapter.getItem(position);
+                Toast.makeText(getBaseContext(), className, Toast.LENGTH_SHORT).show();
+                select_lesson.setText("" + className);
+                //  refresh  refresh
 
             }
 
@@ -122,6 +127,7 @@ public class checkUpActivity extends Activity  {
 
             }
         });
+
 
         check_up_btn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -133,6 +139,10 @@ public class checkUpActivity extends Activity  {
     }
 });
 
+    }
+    public void setListViewData(){
+        LessonListTask lessonListTask = new LessonListTask();
+        lessonListTask.execute();
     }
     public void addList(final ArrayList<HashMap> arrList){
         new Thread(new Runnable() {
@@ -147,8 +157,10 @@ public class checkUpActivity extends Activity  {
                         {
                             Log.d("addList", "addList--------------------->" + arrList.get(i) + "arrList.size()        " + arrList.size());
                            // lessonList.add(arrList.get(i));
-                            adapter.add(arrList.get(i).get("GROUP_NAME").toString());
+                            adapter.add(arrList.get(i).get("CLASS_NAME").toString());
                         }
+                       lesson_list.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                     }
                 });
             }
@@ -172,7 +184,7 @@ public class checkUpActivity extends Activity  {
             ArrayList<HashMap> arrayList1 = new ArrayList<HashMap>();
             try {
 
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/class/class-name-and-no");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/class/class-name-and-no");
 
                 // reiquest 설정
                 request.connectTimeout(2000).readTimeout(2000);
@@ -236,7 +248,7 @@ public class checkUpActivity extends Activity  {
 
         protected String doInBackground(String... params) {
             JSONResultString result;
-
+            //JSONResultString1 result1;
             try {
 
                 HttpRequest request = post("http://192.168.1.13:8088/bitin/api/class/start-class");
@@ -253,9 +265,6 @@ public class checkUpActivity extends Activity  {
                 JSONObject params1 = new JSONObject();
                 params1.put("userId", id.toString());
                 params1.put("className",className.toString());
-
-
-
 
                 Log.d("JoinData-->", params1.toString());
 
@@ -278,14 +287,18 @@ public class checkUpActivity extends Activity  {
                 Reader reader = request.bufferedReader();
 
                 result = GSON.fromJson(reader, JSONResultString.class);
+                //result1 = GSON.fromJson(reader,JSONResultString1.class);
                 reader.close();
 
                 //5. 사용하기
                 Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
                 Log.d("--->ResponseResult-->",result.getData());
+                Log.d("--->ResponseResult",result.getData2());
 
                 codenum = result.getData();
+                classNo= result.getData2();
                 Log.d("Code",codenum);
+                Log.d("Code",classNo);
                 status  = result.getResult();
                 Log.d("결과",status);
 
@@ -295,9 +308,10 @@ public class checkUpActivity extends Activity  {
                     datalist.add(timer);
                     datalist.add(codenum);
                     datalist.add(className);
+                    datalist.add(classNo);
 
 
-                    Log.d("정보","ID:"+ id +",타이머:"+ timer +",인증번호:"+ codenum +",강의명:"+className);
+                    Log.d("정보","ID:"+ id +",타이머:"+ timer +",인증번호:"+ codenum +",강의명:"+className+",ClassNo"+classNo);
                     Intent intent = new Intent(getBaseContext(), checkNowActivity.class);
                     Bundle bundleData = new Bundle();
                     bundleData.putStringArrayList("DATA_LIST", datalist);
@@ -309,7 +323,7 @@ public class checkUpActivity extends Activity  {
                 }else
                     Log.d("오류:","정확하게 입력하세요");
 
-                return result.getData();
+                return result.getData()+result.getData2();
 
             } catch (Exception e3) {
                 e3.printStackTrace();
@@ -317,8 +331,8 @@ public class checkUpActivity extends Activity  {
             return null;
         }
 
-        private class JSONResultString extends JSONResult<String> {
-        }
+        private class JSONResultString extends JSONResult<String> {}
+
     }
     private void refresh( String lesson_list ) {
         adapter.add( lesson_list ) ;

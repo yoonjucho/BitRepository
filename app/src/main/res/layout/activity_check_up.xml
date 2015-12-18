@@ -9,73 +9,92 @@
 
     <ImageView
         android:layout_width="800dp"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:id="@+id/imageView"
-        android:background="@drawable/top"
+        android:background="@drawable/time_bg"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/check_date"
-        android:layout_margin="20dp"
         android:textSize="30dp"
+        android:textColor="#fff"
+        android:id="@+id/check_day"
+        android:layout_above="@+id/check_time"
+        android:layout_alignEnd="@+id/check_up_Btn" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="60dp"
+        android:textColor="#fff"
+        android:id="@+id/check_time"
+        android:layout_marginBottom="10dp"
         android:layout_alignBottom="@+id/imageView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textIsSelectable="true" />
 
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="78dp"
-        android:id="@+id/frameLayout">
+        android:id="@+id/frameLayout"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentEnd="true">
 
 
         <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="141dp"
+            android:id="@+id/lesson_list"
+            android:textAlignment="center"
+            android:layout_gravity="center" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/lesson_list"
-            android:layout_gravity="center" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="출석 체크할 강의를 선택해주세요."
+            android:textSize="15dp"
+            android:id="@+id/textView8"
+          android:layout_marginTop="15dp"
+            android:layout_gravity="center|top" />
     </FrameLayout>
     <TextView
-        android:layout_width="208dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/select_lesson"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_below="@+id/frameLayout"
-        android:layout_centerHorizontal="true" />
+        android:textAlignment="center"
+        android:layout_marginBottom="20dp"
+        android:layout_alignStart="@+id/check_up_Btn"
+        android:layout_below="@+id/frameLayout" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="카운트"
-        android:id="@+id/textView"
-        android:layout_alignBottom="@+id/count_timer"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/count_timer" />
+    <ImageView
+    android:layout_width="35dp"
+    android:layout_height="35dp"
+    android:background="@drawable/time_icon"
+    android:id="@+id/imageView2"
+    android:layout_alignBottom="@+id/count_timer"
+     android:layout_toStartOf="@+id/count_timer" />
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:id="@+id/count_timer"
-        android:layout_above="@+id/check_up_Btn"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView" />
+        android:layout_below="@+id/select_lesson"
+        android:layout_centerHorizontal="true" />
 />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="등록"
         android:id="@+id/check_up_Btn"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp" />
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

@@ -14,33 +14,14 @@
         android:background="@drawable/top"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginTop="60dp" />
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/layout1">
+        android:id="@+id/layout1"
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentLeft="true">
 
-        <ProgressBar
-            android:id="@+id/progressbar"
-            android:layout_width="350dip"
-            android:layout_height="350dip"
-            android:indeterminate="false"
-            android:background="#FFD2DAE1"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:max="60"
-            android:progress="@integer/google_play_services_version"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:id="@+id/count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="00:00"
-            android:textColor="#fff"
-            android:textSize="60dip"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,35 +33,61 @@
     </RelativeLayout>
 
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="121dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="출석체크 인증번호"
+            android:textColor="#fff"
+            android:textSize="25dp"
+            android:id="@+id/textView5"
+            android:textIsSelectable="true"
+            android:textStyle="bold"
+            android:layout_below="@+id/layout1"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="183dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/code_num"
+            android:textSize="70dp"
+            android:textAlignment="center"
+            android:textColor="#FF73CFE1"
+            android:layout_below="@+id/textView5"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="39dp"
+            android:layout_marginLeft="80dp"
+            android:textStyle="bold"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="출석체크시 필요한 인증번호입니다."
+            android:id="@+id/textView7"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="인증번호"
-        android:textSize="25dp"
-        android:id="@+id/textView5"
-        android:textIsSelectable="true"
-        android:textStyle="bold"
-        android:layout_below="@+id/layout1"
+        android:text="00:00"
+        android:textColor="#fff"
+        android:textSize="60dip"
+        android:layout_above="@+id/layout1"
         android:layout_centerHorizontal="true" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/code_num"
-        android:textSize="70dp"
-        android:textAlignment="center"
-        android:textColor="#FF73CFE1"
-        android:layout_below="@+id/textView5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="39dp"
-        android:textStyle="bold"
-        android:textIsSelectable="false" />
-
-
 
 
 </RelativeLayout>
