@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -18,49 +15,22 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.bit_user.myapllication.core.JSONResult;
+import com.github.kevinsawicki.http.HttpRequest;
 import com.google.android.gcm.server.Sender;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import static com.github.kevinsawicki.http.HttpRequest.get;
+import org.json.JSONObject;
+
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.Random;
+
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
 public class JoinActivity extends Activity {
@@ -73,10 +43,12 @@ public class JoinActivity extends Activity {
     String name;
     String phoneId;
     Button registerButton;
-    EditText messageInput;
-    TextView messageOutput;
+    String phoneNumber;
+    String email;
     EditText Edit_id;
     EditText Edit_password;
+    EditText Edit_email;
+    EditText Edit_phone;
     EditText Edit_name;
     RadioGroup radio_position;
     String position;
@@ -95,10 +67,6 @@ public class JoinActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
 
-        //페이지 스크롤 만들기~
-   /*     page = (RelativeLayout)findViewById(R.id.page);
-        page.setMovementMethod(new ScrollingMovementMethod());
-*/
         // 서버 : GOOGLE_API_KEY를 이용해 Sender 초기화
         sender = new Sender(GCMInfo.GOOGLE_API_KEY);
 
@@ -106,6 +74,8 @@ public class JoinActivity extends Activity {
         registerButton = (Button) findViewById(R.id.joinbutton);
         Edit_id = (EditText) findViewById(R.id.Edit_id);
         Edit_password = (EditText) findViewById(R.id.Edit_password);
+        Edit_email = (EditText) findViewById(R.id.Edit_email);
+        Edit_phone = (EditText) findViewById(R.id.Edit_phone);
         Edit_name = (EditText) findViewById(R.id.Edit_name);
         radio_position = (RadioGroup) findViewById(R.id.radio_position);
         Phoneid = (RadioButton) findViewById(R.id.Phoneid);
@@ -143,6 +113,8 @@ public class JoinActivity extends Activity {
                 id = Edit_id.getText().toString();
                 password = Edit_password.getText().toString();
                 name = Edit_name.getText().toString();
+                email = Edit_email.getText().toString();
+                phoneNumber = Edit_phone.getText().toString();
 
                 if(position.isEmpty()){
                     Toast.makeText(JoinActivity.this, "타입을 설정해주세요.", Toast.LENGTH_LONG).show();
@@ -152,6 +124,10 @@ public class JoinActivity extends Activity {
                     Toast.makeText(JoinActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show();
                 }else if(name.isEmpty()){
                     Toast.makeText(JoinActivity.this, "이름을 입력해주세요.", Toast.LENGTH_LONG).show();
+                }else if(email.isEmpty()){
+                    Toast.makeText(JoinActivity.this, "이메일을 입력해주세요.", Toast.LENGTH_LONG).show();
+                }else if(phoneNumber.isEmpty()){
+                    Toast.makeText(JoinActivity.this, "휴대폰 번호를 입력해주세요.", Toast.LENGTH_LONG).show();
                 }
                 else {
                     try {
@@ -186,8 +162,9 @@ public class JoinActivity extends Activity {
                 params1.put("userId",id);
                 params1.put("userPassword", password);
                 params1.put("userName", name);
+                params1.put("userPhone", phoneNumber);
+                params1.put("userEmail", email);
                 params1.put("userType",position);
-                Log.d(TAG, "ddddddddddddddddddddd"+position);
                 params1.put("phoneId",phoneId.toString());
 
                 Log.d("JoinData-->", params1.toString());
