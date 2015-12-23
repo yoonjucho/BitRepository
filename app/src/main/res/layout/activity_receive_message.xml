@@ -19,7 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/Fl1"
-        android:layout_below="@+id/imageView">
+        android:layout_below="@+id/imageView"
+        android:layout_marginBottom="10dp">
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="200dp"
@@ -34,7 +35,17 @@
         android:layout_width="match_parent"
         android:id="@+id/linear2"
         android:layout_below="@+id/Fl1"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="수업이름"
+            android:textSize="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -44,6 +55,25 @@
             android:textSize="16dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/linear8"
+        android:layout_below="@+id/linear2"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="질문자 이름"
+            android:textSize="16dp"
+            android:layout_alignParentStart="true"
             android:layout_weight="1" />
 
         <TextView
@@ -60,9 +90,19 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:id="@+id/linear3"
-        android:layout_below="@+id/linear2"
-        android:layout_height="wrap_content">
+        android:id="@+id/linear7"
+        android:layout_below="@+id/linear8"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="PPT 번호"
+            android:textSize="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,7 +113,24 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_weight="1" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/linear3"
+        android:layout_below="@+id/linear7"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="질문 시간"
+            android:textSize="16dp"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,8 +148,7 @@
         android:layout_width="match_parent"
         android:layout_below="@+id/linear3"
         android:id="@+id/linear1"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
@@ -102,15 +158,17 @@
             android:textSize="16dp"
             android:id="@+id/textView2"
             android:layout_below="@+id/qna_teacher"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_weight="1" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="132dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/ask_Message"
             android:text = "@string/one_more_time"
             android:layout_below="@+id/textView2"
             android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_weight="1"  />
     </LinearLayout>
 </RelativeLayout>

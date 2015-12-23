@@ -43,16 +43,18 @@ public class VoteResultActivity extends Activity {
     public ArrayList<Map> voteResultList = new ArrayList<Map>();
 
     public List<double[]> values = new ArrayList<double[]>();
+    public List<Double> doubleList = new ArrayList<Double>();
 
+    public double[] resultList;
     String id;
     Double voteNumber;
     Sender sender;
 
     String status;
     Handler handler = new Handler();
-    private Random random ;
+    private Random random;
     private int TTLTime = 60;
-    private	int RETRY = 3;
+    private int RETRY = 3;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class VoteResultActivity extends Activity {
 
         Intent intent = getIntent();
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
-        if(bundleData == null){
+        if (bundleData == null) {
             Toast.makeText(this, "Bundle data is null!", Toast.LENGTH_LONG).show();
             return;
         }
@@ -71,14 +73,18 @@ public class VoteResultActivity extends Activity {
         id = bundleData.getString("ID");
         voteNumber = bundleData.getDouble("VOTENUMBER");
 
-        Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "ID is " + id, Toast.LENGTH_LONG).show();
 
         VoteResultTask lTask = new VoteResultTask();
         lTask.execute();
 
-        double[] resultList = new double[] { 14230, 12300, 14240, 15244, 15900, 19200,
-                22030 };
+        for (int i = 0; i < doubleList.size(); i++) {
+            resultList[i] =doubleList.get(i);
+        }
+
         values.add(resultList);
+
+        Log.d("mmoo", resultList.toString());
 
         /** 그래프 출력을 위한 그래픽 속성 지정객체 */
         XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
@@ -88,10 +94,10 @@ public class VoteResultActivity extends Activity {
         renderer.setChartTitleTextSize(50);
 
         // 분류에 대한 이름
-        String[] titles = new String[] { "월별 판매량" };
+        String[] titles = new String[]{"월별 판매량"};
 
         // 항목을 표시하는데 사용될 색상값
-        int[] colors = new int[] { Color.YELLOW };
+        int[] colors = new int[]{Color.YELLOW};
 
         // 분류명 글자 크기 및 각 색상 지정
         renderer.setLegendTextSize(50);
@@ -115,9 +121,8 @@ public class VoteResultActivity extends Activity {
         renderer.setYAxisMin(0);
         renderer.setYAxisMax(24000);
 
-
-        for(int i = 1 ; i <= resultList.length  ; i ++){
-            renderer.addXTextLabel(i,"o");
+        for (int i = 1; i <= resultList.length; i++) {
+            renderer.addXTextLabel(i, "o");
             renderer.setLabelsTextSize(50);
         }
 
@@ -220,6 +225,7 @@ public class VoteResultActivity extends Activity {
                             for (int i = 0; i < arrList.size(); i++) {
                                 Log.d("addList", "addList--------------------->" + arrList.get(i) + "arrList.size()        " + arrList.size());
                                 voteResultList.add(arrList.get(i));
+                                doubleList.add((double) arrList.get(i).get("selectedCount"));
                                 //adapter.add(arrList.get(i));
                             }
                         }
@@ -231,5 +237,4 @@ public class VoteResultActivity extends Activity {
         private class JSONResultString extends JSONResult<ArrayList<Map>> {
         }
     }
-
 }

@@ -6,31 +6,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.os.PowerManager;
-import android.text.format.Time;
 import android.util.Log;
-
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.bit_user.myapllication.core.JSONResult;
 import com.github.kevinsawicki.http.HttpRequest;
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Sender;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
@@ -40,7 +28,6 @@ import org.json.JSONObject;
 
 import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -54,16 +41,17 @@ public class NoticeStudentActivity extends Activity {
     private CusromAdapter adapter;
     private ArrayList<Map> listReturn = new ArrayList<Map>();
 
+    public String phoneId;
     ListView checkList;
     TextView noticeLesson;
     TextView noticeTitle;
     TextView noticeTime;
     TextView noticeMessage;
 
-    public String MESSAGE;
+    public String PHONEID;
     String id;
     Sender sender;
-
+    String data;
     String status;
     Handler handler = new Handler();
     private Random random ;
@@ -83,22 +71,32 @@ public class NoticeStudentActivity extends Activity {
         this.noticeLesson = (TextView)findViewById(R.id.notice_lesson);
 
         Intent intent = getIntent();
+
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
         if(bundleData == null){
-            Toast.makeText(this, "Bundle data is null!",Toast.LENGTH_LONG).show();
-            return;
+            registerDevice();
+
+            adapter = new CusromAdapter(this, 0, listReturn );
+            this.checkList.setAdapter(adapter);
+            checkList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            this.adapter.notifyDataSetChanged();
+
+            LessonListTask lTask = new LessonListTask();
+            lTask.execute();
+        }
+        else {
+            id = bundleData.getString("ID");
+            Toast.makeText(this, "ID is " + id, Toast.LENGTH_LONG).show();
+
+            adapter = new CusromAdapter(this, 0, listReturn );
+            this.checkList.setAdapter(adapter);
+            checkList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+            this.adapter.notifyDataSetChanged();
+
+            LessonListTask lTask = new LessonListTask();
+            lTask.execute();
         }
 
-        id = bundleData.getString("ID");
-        Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
-
-        adapter = new CusromAdapter(this, 0, listReturn );
-        this.checkList.setAdapter(adapter);
-        checkList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        this.adapter.notifyDataSetChanged();
-
-        LessonListTask lTask = new LessonListTask();
-        lTask.execute();
     }
 
     private class CusromAdapter extends ArrayAdapter<Map>
@@ -226,4 +224,89 @@ public class NoticeStudentActivity extends Activity {
         }
     }
 
+    private void processIntent(Intent intent) {
+        String from = intent.getStringExtra("from");
+        if (from == null) {
+            Log.d(TAG, "*********from is null.");
+            return;
+        }
+        id = intent.getStringExtra("bundleId");
+        String command = intent.getStringExtra("command");
+        String type = intent.getStringExtra("type");
+        data = intent.getStringExtra("data");
+        Log.d(TAG, "bundleId: "+ id +"from : " + from + ", command : " + command + ", type : " + type + ", data : " + data );
+    }
+
+
+    private void registerDevice() {
+        RegisterThread registerObj = new RegisterThread();
+        registerObj.start();
+    }
+
+    class RegisterThread extends Thread {
+        public void run() {
+            try {
+                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                phoneId = gcm.register(GCMInfo.PROJECT_ID);
+                Log.d("regId", "" + phoneId);
+                phoneIdTask pTask = new phoneIdTask();
+                pTask.execute();
+
+                LessonListTask lTask = new LessonListTask();
+                lTask.execute();
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private class phoneIdTask extends AsyncTask<String, Void, String> {
+        protected String doInBackground(String... params) {
+            try {
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/useridbyphoneid");
+                request.connectTimeout(2000).readTimeout(2000);
+
+                request.acceptCharset("UTF-8");
+                request.acceptJson();
+                request.accept(HttpRequest.CONTENT_TYPE_JSON);
+                request.contentType("application/json", "UTF-8");
+
+                JSONObject params1 = new JSONObject();
+                params1.put("phoneId", phoneId);
+
+                Log.d("GCM12 Data-->", params1.toString());
+
+                request.send(params1.toString());
+
+                int responseCode = request.code();
+                if (HttpURLConnection.HTTP_OK != responseCode) {
+                    Log.e("HTTP fail-->", "Http Response Fail:" + responseCode);
+                    return "오류";
+                } else {
+                    Log.e("HTTPRequest-->", "정상");
+                }
+
+                Reader reader = request.bufferedReader();
+                JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
+                reader.close();
+
+                id = result.getData();
+                status = result.getResult();
+                Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
+
+                return result.getResult();
+            } catch (Exception e3) {
+                e3.printStackTrace();
+            }
+            return null;
+        }
+        private class JSONResultString extends JSONResult<String> {
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Toast.makeText(NoticeStudentActivity.this, result, Toast.LENGTH_LONG).show();
+        }
+    }
 }

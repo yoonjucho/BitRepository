@@ -1,21 +1,14 @@
 package com.example.bit_user.myapplication;
 
 import android.app.Activity;
-import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.os.PowerManager;
-import android.text.format.Time;
 import android.util.Log;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.bit_user.myapllication.core.JSONResult;
 import com.github.kevinsawicki.http.HttpRequest;
+import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Sender;
@@ -52,6 +46,7 @@ public class QnAActivity extends Activity {
     private ArrayList<String> arrayList = new ArrayList<String>();
     private ArrayAdapter<String>adapter;
 
+    public String bundleId;
     EditText ppt_number;
     String pptNo;
     ListView check_list;
@@ -59,7 +54,6 @@ public class QnAActivity extends Activity {
     public String teacherId;
     EditText messageInput;
     TextView messageOutput;
-    TextView dd;
     Sender sender;
     String lessonName;
     TextView check_lesson;
@@ -77,10 +71,6 @@ public class QnAActivity extends Activity {
         setContentView(R.layout.activity_qn_a);
 
         Intent intent = getIntent();
-        if (intent != null) {
-            processIntent(intent);
-        }
-
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
 
         if(bundleData == null){
@@ -95,10 +85,6 @@ public class QnAActivity extends Activity {
         messageInput = (EditText) findViewById(R.id.ask_Message);
         messageOutput = (TextView) findViewById(R.id.messageOutput);
         ppt_number = (EditText) findViewById(R.id.ppt_number);
-
-        //change dd
-        dd=(TextView)findViewById(R.id.dd);
-        dd.setText("dd");
 
         check_list=(ListView)findViewById(R.id.qna_teacher);
         check_lesson=(TextView)findViewById(R.id.check_lesson_qna);
@@ -124,6 +110,8 @@ public class QnAActivity extends Activity {
                         idList.clear();
                         //idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
                         teacherId = lessonList.get(i).get("USER_PHONE_ID").toString();
+                        bundleId = lessonList.get(i).get("USER_ID").toString();
+                        idList.add(teacherId);
                     }
                 }
 
@@ -144,6 +132,10 @@ public class QnAActivity extends Activity {
                 sendToDevice(data);
             }
         });
+
+        if (intent != null) {
+            processIntent(intent);
+        }
     }
 
     private void registerDevice() {
@@ -154,12 +146,13 @@ public class QnAActivity extends Activity {
     class RegisterThread extends Thread {
         public void run() {
             try {
-                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
-                regId = gcm.register(GCMInfo.PROJECT_ID);
-                Log.d("regId",""+regId);
 
-                idList.clear();
-                idList.add(teacherId);
+                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                GCMRegistrar.checkDevice(getApplicationContext());
+                GCMRegistrar.checkManifest(getApplicationContext());
+                regId = gcm.register(GCMInfo.PROJECT_ID);
+                GCMRegistrar.register(getApplicationContext(), GCMIntentService.SEND_ID);
+                println("------------>ID : " + regId);
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -310,7 +303,7 @@ public class QnAActivity extends Activity {
 
         public void run() {
             try {
-                sendText(data);
+                sendText("질문이 도착했습니다.");
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -329,8 +322,10 @@ public class QnAActivity extends Activity {
                 gcmMessageBuilder.addData("type", "text");
                 gcmMessageBuilder.addData("command", "show");
                 gcmMessageBuilder.addData("class", "qna");
+                gcmMessageBuilder.addData("bundleId", bundleId);
                 gcmMessageBuilder.addData("data", URLEncoder.encode(data, "UTF-8"));
 
+                Log.d(TAG,idList.toString());
                 Message gcmMessage = gcmMessageBuilder.build();
                 MulticastResult resultMessage = sender.send(gcmMessage, idList, RETRY);
 
@@ -356,15 +351,13 @@ public class QnAActivity extends Activity {
     private void processIntent(Intent intent) {
         String from = intent.getStringExtra("from");
         if (from == null) {
-            Log.d(TAG, "*********from is null.");
             return;
         }
         String command = intent.getStringExtra("command");
         String type = intent.getStringExtra("type");
         data = intent.getStringExtra("data");
-        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+"sender"+ regId);
+        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+ "sender : " + regId);
 
-        dd.setText("Message from [" + from + "] : " + data);
     }
 
     private void println(String msg) {
@@ -376,20 +369,4 @@ public class QnAActivity extends Activity {
             }
         });
     }
-
-    /*
-    private static PowerManager.WakeLock wakeLock;
-    public static void acquire(Context context, long timeout) {
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        wakeLock = pm.newWakeLock(
-                PowerManager.ACQUIRE_CAUSES_WAKEUP         |
-                        PowerManager.FULL_WAKE_LOCK         |
-                        PowerManager.ON_AFTER_RELEASE
-                , context.getClass().getName());
-        if(timeout > 0)
-            wakeLock.acquire(timeout);
-        else
-            wakeLock.acquire();
-    }
-    */
 }

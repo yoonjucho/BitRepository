@@ -1,18 +1,16 @@
 package com.example.bit_user.myapplication;
 
-import java.net.URLDecoder;
-
 import android.app.KeyguardManager;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.os.PowerManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.os.Vibrator;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
-import android.app.Notification;
 import android.util.Log;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.net.URLDecoder;
 
 /**
  * 푸시 메시지를 받는 Receiver 정의
@@ -49,6 +47,9 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {		//상대방이 메시지 보낼때  intent의 부가적인 정보로 사용
+
+		GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+
 		String action = intent.getAction();
 		Log.d(TAG, "action : " + action);
 		
@@ -74,7 +75,7 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 				}
 				else if(thisClass.contains("qna")){
 					Log.d(TAG, "GCMBoard qna");
-					sendToQNAActivity(context, from, command, type, data);
+					//sendToQNAActivity(context, from, command, type, data);
 				}
 				else if(thisClass.contains("notice")){
 					Log.d(TAG, "GCMBoard notice");
@@ -132,48 +133,4 @@ public class GCMBroadcastReceiver extends WakefulBroadcastReceiver {
 		*/
 	}
 
-	private void sendToQNAActivity(Context context, String from, String command, String type, String data) {
-		/*
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
-			vibrator.vibrate(1000);
-			QnAActivity.acquire(context, 10000);
-			context.startActivity(intent);
-			*/
-
-		Vibrator vibrator = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
-		NotificationManager mNotificationManager  =
-				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-		Intent intent = new Intent(context, QnAActivity.class);
-		intent.putExtra("from", from);
-		intent.putExtra("command", command);
-		intent.putExtra("type", type);
-		intent.putExtra("data", data);
-		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP); //contentIntent?
-
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-		mBuilder.setSmallIcon(R.drawable.ic_launcher);//required
-		mBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(data));
-		mBuilder.setContentTitle(from);//required
-		mBuilder.setContentText(data);//required
-		mBuilder.setTicker("QnA");//optional
-		mBuilder.setNumber(10);//optional
-		mBuilder.setContentIntent(contentIntent);
-		mBuilder.setAutoCancel(true);
-
-		//Notification noti = mBuilder.build();
-		//noti.defaults |= Notification.DEFAULT_VIBRATE;
-
-		// 잠든 단말을 깨워라.
-		acquireCpuWakeLock(context);
-		// WakeLock 해제.
-		releaseCpuLock();
-
-		mNotificationManager.notify(1, mBuilder.build());
-		vibrator.vibrate(1000); //1초 동안 진동
-	}
 }

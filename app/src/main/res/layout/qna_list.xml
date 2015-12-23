@@ -2,7 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        >
 
     <TextView android:id="@+id/qnalist_lessonname"
         android:text="수업이름"
@@ -22,6 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
+    </LinearLayout>
+
     <Button android:id="@+id/qnalist_check_qna"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
@@ -31,4 +40,5 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:text="삭제"  />
+
 </LinearLayout>

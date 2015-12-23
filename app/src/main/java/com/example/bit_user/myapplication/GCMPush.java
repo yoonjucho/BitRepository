@@ -1,42 +1,39 @@
 package com.example.bit_user.myapplication;
 
         import android.app.Activity;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.os.Handler;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.PowerManager;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import android.os.PowerManager;
-        import android.util.Log;
-
-        import android.view.View;
-        import android.view.View.OnClickListener;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.TextView;
-        import android.widget.Toast;
-
-
-        import com.example.bit_user.myapllication.core.JSONResult;
-        import com.github.kevinsawicki.http.HttpRequest;
+import com.example.bit_user.myapllication.core.JSONResult;
+import com.github.kevinsawicki.http.HttpRequest;
+        import com.google.android.gcm.GCMRegistrar;
         import com.google.android.gcm.server.Message;
-        import com.google.android.gcm.server.MulticastResult;
-        import com.google.android.gcm.server.Sender;
-        import com.google.android.gms.gcm.GoogleCloudMessaging;
-        import com.google.gson.Gson;
-        import com.google.gson.GsonBuilder;
+import com.google.android.gcm.server.MulticastResult;
+import com.google.android.gcm.server.Sender;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-        import org.json.JSONObject;
+import org.json.JSONObject;
 
-        import java.io.Reader;
-        import java.net.HttpURLConnection;
-        import java.net.URLEncoder;
-        import java.util.ArrayList;
-        import java.util.Random;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Random;
 
-        import static com.github.kevinsawicki.http.HttpRequest.post;
+import static com.github.kevinsawicki.http.HttpRequest.post;
 
 public class GCMPush extends Activity {
     public static final String TAG = "GCMPush";
@@ -173,8 +170,12 @@ public class GCMPush extends Activity {
         public void run() {
             try {
                 GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                GCMRegistrar.checkDevice(getApplicationContext());
+                GCMRegistrar.checkManifest(getApplicationContext());
                 regId = gcm.register(GCMInfo.PROJECT_ID);
+                GCMRegistrar.register(getApplicationContext(), GCMIntentService.SEND_ID);
                 println("ID : " + regId);
+
                 //idList.clear();
                 //idList.add(regId);
             } catch(Exception ex) {

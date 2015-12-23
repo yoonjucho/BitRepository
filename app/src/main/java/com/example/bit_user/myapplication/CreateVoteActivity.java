@@ -6,14 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.os.PowerManager;
-import android.text.format.Time;
 import android.util.Log;
-
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.example.bit_user.myapllication.core.JSONResult;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -50,16 +43,17 @@ import static com.github.kevinsawicki.http.HttpRequest.post;
 public class CreateVoteActivity extends Activity {
     public static final String TAG = "CreateVoteActivity";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-    ArrayList<String> idList = new ArrayList<String>();
 
-    public ArrayList<String> lessonList = new ArrayList<String>();
-    public ArrayList<String> arrayList = new ArrayList<String>();
+    public ArrayList<String> idList = new ArrayList<String>();
+    public ArrayList<Map> lessonList = new ArrayList<Map>();
+    private ArrayList<String> arrayList = new ArrayList<String>();
     public ArrayList<String> voteList = new ArrayList<String>();
     public ArrayAdapter<String> listadapter;
-
     private CusromAdapter adapter;
     private ArrayList<VoteList> listReturn = new ArrayList<VoteList>();
 
+
+    String data;
     String voteTitle;
     String lessonName;
     TextView check_lesson_;
@@ -100,9 +94,14 @@ public class CreateVoteActivity extends Activity {
 
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
         if(bundleData == null){
-            Toast.makeText(this, "Bundle data is null!",Toast.LENGTH_LONG).show();
-            return;
+            processIntent(intent);
+            Log.d("pow", "bbbbbbbbbbbbbbbbbbbbbbbbbb???" + id);
         }
+        else {
+            id = bundleData.getString("ID");
+            Toast.makeText(this, "ID is " + id, Toast.LENGTH_LONG).show();
+        }
+
 
         id = bundleData.getString("ID");
         Toast.makeText(this, "ID is "+id ,Toast.LENGTH_LONG).show();
@@ -114,8 +113,8 @@ public class CreateVoteActivity extends Activity {
         this.voteView.setAdapter(adapter);
         this.adapter.notifyDataSetChanged();
 
-        listadapter= new ArrayAdapter<String>
-                (this, android.R.layout.simple_list_item_1,arrayList);
+        listadapter= new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, arrayList);
+
         lesson_list.setAdapter(listadapter);
         lesson_list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
@@ -127,11 +126,7 @@ public class CreateVoteActivity extends Activity {
                 lessonName = (String) listadapter.getItem(position);
                 Toast.makeText(getBaseContext(), lessonName, Toast.LENGTH_SHORT).show();
 
-                //학생들 idlist 받아오기
-
-                //id 등록하기
-                //registerDevice();
-
+                registerDevice();
                 check_lesson_.setText("" + lessonName);
             }
         });
@@ -147,8 +142,12 @@ public class CreateVoteActivity extends Activity {
 
         voteButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                //디비에 추가하기
+                //디비에 추가하
+
                 voteTitle = title.getText().toString();
+                data = title.getText().toString();
+                sendToDevice(data);
+
                 DBTask dTask = new DBTask();
                 dTask.execute();
 
@@ -217,7 +216,6 @@ public class CreateVoteActivity extends Activity {
 
             return v;
         }
-
     }//end class CusromAdapter
 
     public void RemoveData(int nPosition)
@@ -225,10 +223,39 @@ public class CreateVoteActivity extends Activity {
         this.adapter.remove(this.listReturn.get(nPosition));
     }
 
+    private void registerDevice() {
+        RegisterThread registerObj = new RegisterThread();
+        registerObj.start();
+    }
+
+    class RegisterThread extends Thread {
+        public void run() {
+            try {
+                GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                regId = gcm.register(GCMInfo.PROJECT_ID);
+                Log.d("regId", "" + regId);
+
+                for (int i = 0; i < lessonList.size(); i++) {
+                    if (lessonName == lessonList.get(i).get("CLASS_NAME").toString()) {
+                        //idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
+                        idList = (ArrayList)lessonList.get(i).get("PHONE_ID_LIST");
+                        Log.d("pw",idList.toString());
+                    }
+                }
+
+                //idList.clear();
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     private class LessonListTask extends AsyncTask<String, Void, String> {
+        ArrayList<Map> arrayList = new ArrayList<Map>();
+
         protected String doInBackground(String... params) {
             try {
-                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/user/classname-by-teacherid");
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/class/student-phone-list");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 request.acceptCharset("UTF-8");
@@ -255,7 +282,6 @@ public class CreateVoteActivity extends Activity {
                 reader.close();
 
                 arrayList = result.getData();
-
                 addList(arrayList);
 
                 status = result.getResult();
@@ -271,7 +297,7 @@ public class CreateVoteActivity extends Activity {
             return null;
         }
 
-        public void addList(final ArrayList<String> arrList) {
+        public void addList(final ArrayList<Map> arrList) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -281,7 +307,7 @@ public class CreateVoteActivity extends Activity {
                             for (int i = 0; i < arrList.size(); i++) {
                                 Log.d("addList", "addList--------------------->" + arrList.get(i) + "arrList.size()        " + arrList.size());
                                 lessonList.add(arrList.get(i));
-                                listadapter.add(arrList.get(i));
+                                listadapter.add(arrList.get(i).get("CLASS_NAME").toString());
                             }
                         }
                     });
@@ -289,7 +315,13 @@ public class CreateVoteActivity extends Activity {
             }).start();
         }
 
-        private class JSONResultString extends JSONResult<ArrayList<String>> {
+        private class JSONResultString extends JSONResult<ArrayList<Map>> {
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Toast.makeText(CreateVoteActivity.this, result, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -339,10 +371,67 @@ public class CreateVoteActivity extends Activity {
         private class JSONResultString extends JSONResult<ArrayList<String>> {
         }
 
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Toast.makeText(CreateVoteActivity.this, result, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void sendToDevice(String data) {
+        SendThread thread = new SendThread(data);
+        thread.start();
+    }
+
+    class SendThread extends Thread {
+        String data;
+        public SendThread(String inData) {
+            data = inData;
+        }
+
+        public void run() {
+            try {
+                sendText(data);
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        public void sendText(String msg)
+                throws Exception
+        {
+            if( random == null){
+                random = new Random(System.currentTimeMillis());
+            }
+            String messageCollapseKey = String.valueOf(Math.abs(random.nextInt()));
+            try {
+                Message.Builder gcmMessageBuilder = new Message.Builder();
+                gcmMessageBuilder.collapseKey(messageCollapseKey).delayWhileIdle(true).timeToLive(TTLTime);
+                gcmMessageBuilder.addData("type", "text");
+                gcmMessageBuilder.addData("command", "show");
+                gcmMessageBuilder.addData("class", "vote");
+                gcmMessageBuilder.addData("data", URLEncoder.encode(data, "UTF-8"));
+
+                Message gcmMessage = gcmMessageBuilder.build();
+                MulticastResult resultMessage = sender.send(gcmMessage, idList, RETRY);
+
+                String output = "GCM6 => " + resultMessage.getMulticastId()
+                        + "," + resultMessage.getRetryMulticastIds() + "," + resultMessage.getSuccess();
+            } catch(Exception ex) {
+                ex.printStackTrace();
+                String output = "GCM7 : " + ex.toString();
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        Log.d(TAG, "onNewIntent() called.");
+        processIntent(intent);
+        super.onNewIntent(intent);
     }
 
     private void processIntent(Intent intent) {
-        /*
         String from = intent.getStringExtra("from");
         if (from == null) {
             Log.d(TAG, "*********from is null.");
@@ -351,12 +440,8 @@ public class CreateVoteActivity extends Activity {
         String command = intent.getStringExtra("command");
         String type = intent.getStringExtra("type");
         data = intent.getStringExtra("data");
-        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+"sender"+ regId);
-
-        DBTask dbTask = new DBTask();
-        dbTask.execute();
-
-        dd.setText("Message from [" + from + "] : " + data);
-        */
+        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data + "sender" + regId);
     }
+
 }
+

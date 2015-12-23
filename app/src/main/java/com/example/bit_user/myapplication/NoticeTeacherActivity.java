@@ -1,21 +1,14 @@
 package com.example.bit_user.myapplication;
 
 import android.app.Activity;
-import android.app.TabActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.os.PowerManager;
-import android.text.format.Time;
 import android.util.Log;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -130,6 +123,13 @@ public class NoticeTeacherActivity extends Activity {
                 title = noticeTitle.getText().toString();
                 data = noticeMessage.getText().toString();
                 sendToDevice(data);
+
+                Intent gointent = new Intent(getBaseContext(),MenuActivity.class);
+                Bundle bundleData = new Bundle();
+                bundleData.putString("ID", id);
+                gointent.putExtra("ID_DATA", bundleData);
+                startActivity(gointent);
+                finish();
             }
         });
     }
@@ -281,6 +281,7 @@ public class NoticeTeacherActivity extends Activity {
             }
             return null;
         }
+
         private class JSONResultString extends JSONResult<String> {
         }
 
@@ -298,14 +299,13 @@ public class NoticeTeacherActivity extends Activity {
 
     class SendThread extends Thread {
         String data;
-
         public SendThread(String inData) {
             data = inData;
         }
 
         public void run() {
             try {
-                sendText(data);
+                sendText(title);
             } catch(Exception ex) {
                 ex.printStackTrace();
             }
@@ -351,13 +351,12 @@ public class NoticeTeacherActivity extends Activity {
     private void processIntent(Intent intent) {
         String from = intent.getStringExtra("from");
         if (from == null) {
-            Log.d(TAG, "*********from is null.");
             return;
         }
         String command = intent.getStringExtra("command");
         String type = intent.getStringExtra("type");
         data = intent.getStringExtra("data");
-        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+"sender"+ regId);
+        Log.d(TAG, "from : " + from + ", command : " + command + ", type : " + type + ", data : " + data+ ",sender : "+ regId);
     }
 
     private void println(String msg) {
@@ -369,20 +368,4 @@ public class NoticeTeacherActivity extends Activity {
             }
         });
     }
-
-    /*
-    private static PowerManager.WakeLock wakeLock;
-    public static void acquire(Context context, long timeout) {
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        wakeLock = pm.newWakeLock(
-                PowerManager.ACQUIRE_CAUSES_WAKEUP         |
-                        PowerManager.FULL_WAKE_LOCK         |
-                        PowerManager.ON_AFTER_RELEASE
-                , context.getClass().getName());
-        if(timeout > 0)
-            wakeLock.acquire(timeout);
-        else
-            wakeLock.acquire();
-    }
-    */
 }

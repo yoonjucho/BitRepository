@@ -24,7 +24,7 @@
         android:id="@+id/textt"/>
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="500dp"
         android:id="@+id/vote_list_teacher"
         android:layout_alignParentStart="true"

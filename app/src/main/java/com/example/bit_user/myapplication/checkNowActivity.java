@@ -3,22 +3,19 @@ package com.example.bit_user.myapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 
 public class  checkNowActivity extends Activity implements OnClickListener {
@@ -50,12 +47,8 @@ public class  checkNowActivity extends Activity implements OnClickListener {
         Intent intent = getIntent();
         datalist = new ArrayList<String>();
         bundleData = intent.getBundleExtra("DATA");
-
-
         datalist = bundleData.getStringArrayList("DATA_LIST");
-
         Log.d("dd", datalist.toString());
-
 
         code_num = (TextView) findViewById(R.id.code_num);
         count = (TextView) findViewById(R.id.count);
@@ -65,8 +58,6 @@ public class  checkNowActivity extends Activity implements OnClickListener {
 
         codenum = datalist.get(2);//앞 엑티비티에서 인증번호 값 받아오기
         code_num.setText("" + codenum);//TextView에 인증번호 띄우기
-
-
 
         timer = datalist.get(1);//앞 엑티비티에서 타이머 값 받아오기
         //count.setText(timer);
@@ -79,7 +70,6 @@ public class  checkNowActivity extends Activity implements OnClickListener {
             setTimer();
 
             //Hides the Keyboard
-
 
             InputMethodManager imm = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
@@ -103,7 +93,6 @@ public class  checkNowActivity extends Activity implements OnClickListener {
                     Toast.LENGTH_LONG).show();
 
         totalTimeCountInMilliseconds = 60 * count_timer * 1000;
-
         timeBlinkInMilliseconds = 30 * 1000;
     }
 
@@ -119,7 +108,6 @@ public class  checkNowActivity extends Activity implements OnClickListener {
                 //Setting the Progress Bar to decrease wih the timer
                 mProgressBar.setProgress((int) (leftTimeInMilliseconds / 1000));
                 // textViewShowTime.setTextAppearance(getApplicationContext(),);
-
 
                 if (leftTimeInMilliseconds < timeBlinkInMilliseconds) {
                     //   textViewShowTime.setTextAppearance(getApplicationContext(),
