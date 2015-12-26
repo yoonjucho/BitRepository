@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.os.PowerManager;
+import android.text.format.Time;
 import android.util.Log;
 
 import android.view.LayoutInflater;
@@ -53,13 +54,15 @@ public class CreateVoteActivity extends Activity {
 
     public ArrayList<String> lessonList = new ArrayList<String>();
     public ArrayList<String> arrayList = new ArrayList<String>();
+    public ArrayList<String> voteList = new ArrayList<String>();
     public ArrayAdapter<String> listadapter;
 
     private CusromAdapter adapter;
     private ArrayList<VoteList> listReturn = new ArrayList<VoteList>();
 
+    String voteTitle;
     String lessonName;
-    EditText check_lesson_;
+    TextView check_lesson_;
     ListView lesson_list;
     Button plusButton;
     Button voteButton;
@@ -89,7 +92,7 @@ public class CreateVoteActivity extends Activity {
         this.voteView = (ListView)findViewById(R.id.vote_list);
         this.plusButton = (Button) findViewById(R.id.vote_plus_btn);
         this.voteButton = (Button) findViewById(R.id.vote_btn);
-        this.check_lesson_ = (EditText) findViewById(R.id.check_lesson_);
+        this.check_lesson_ = (TextView) findViewById(R.id.check_lesson_);
         Intent intent = getIntent();
         if (intent != null) {
             processIntent(intent);
@@ -123,17 +126,12 @@ public class CreateVoteActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lessonName = (String) listadapter.getItem(position);
                 Toast.makeText(getBaseContext(), lessonName, Toast.LENGTH_SHORT).show();
-                /*
-                for (int i = 0; i < lessonList.size(); i++) {
-                    if (lessonName == lessonList.get(i).get("GROUP_NAME").toString()) {
-                        idList.clear();
-                        idList.add(lessonList.get(i).get("USER_PHONE_ID").toString());
-                        teacherId = lessonList.get(i).get("USER_PHONE_ID").toString();
-                    }
-                }
+
+                //학생들 idlist 받아오기
+
                 //id 등록하기
                 //registerDevice();
-                */
+
                 check_lesson_.setText("" + lessonName);
             }
         });
@@ -141,6 +139,7 @@ public class CreateVoteActivity extends Activity {
         plusButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 String plus = txtVoteData.getText().toString();
+                voteList.add(plus);
                 onClick_vote_plus_btn_Custom(v);
                 //투표 리스트에 추가하기
             }
@@ -149,19 +148,18 @@ public class CreateVoteActivity extends Activity {
         voteButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 //디비에 추가하기
-                //sendToDevice(data);
+                voteTitle = title.getText().toString();
+                DBTask dTask = new DBTask();
+                dTask.execute();
+
+                Intent gointent = new Intent(getBaseContext(),VoteListTeacher.class);
+                Bundle bundleData = new Bundle();
+                bundleData.putString("ID", id);
+                gointent.putExtra("ID_DATA", bundleData);
+                startActivity(gointent);
+                finish();
             }
         });
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void  onClick_vote_plus_btn_Custom(View v)
@@ -257,6 +255,7 @@ public class CreateVoteActivity extends Activity {
                 reader.close();
 
                 arrayList = result.getData();
+
                 addList(arrayList);
 
                 status = result.getResult();
@@ -292,6 +291,54 @@ public class CreateVoteActivity extends Activity {
 
         private class JSONResultString extends JSONResult<ArrayList<String>> {
         }
+    }
+
+    private class DBTask extends AsyncTask<String, Void, String> {
+
+        protected String doInBackground(String... params) {
+            try {
+                HttpRequest request = post("http://192.168.1.32:8088/bitin/api/vote/enroll");
+                request.connectTimeout(2000).readTimeout(2000);
+
+                request.acceptCharset("UTF-8");
+                request.acceptJson();
+                request.accept(HttpRequest.CONTENT_TYPE_JSON);
+                request.contentType("application/json", "UTF-8");
+
+                JSONObject params1 = new JSONObject();
+                params1.put("userId", id);
+                params1.put("className", lessonName);
+                params1.put("voteTitle", voteTitle);
+                params1.put("voteContent", voteList);
+
+                Log.d("GCM Data-->", params1.toString());
+
+                request.send(params1.toString());
+
+                int responseCode = request.code();
+                if (HttpURLConnection.HTTP_OK != responseCode) {
+                    Log.e("HTTP fail-->", "Http Response Fail:" + responseCode);
+                    return "오류";
+                } else {
+                    Log.e("HTTPRequest-->", "정상");
+                }
+
+                Reader reader = request.bufferedReader();
+                JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
+                reader.close();
+
+                status = result.getResult();
+                Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
+                return result.getResult();
+            } catch (Exception e3) {
+                e3.printStackTrace();
+            }
+            return null;
+        }
+
+        private class JSONResultString extends JSONResult<ArrayList<String>> {
+        }
+
     }
 
     private void processIntent(Intent intent) {

@@ -6,31 +6,61 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@drawable/bg1"
     tools:context="com.example.bit_user.myapplication.JoinActivity">
-
-    <ImageView
-        android:layout_width="800dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:background="@drawable/top"
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignEnd="@+id/TextView1"
+        android:layout_alignParentTop="true"
+        android:background="#9055BEDB"
+        android:id="@+id/linearLayout6">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="STUBIT"
+            android:id="@+id/textView16"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="20dp"
+            android:textSize="50dp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="회원가입 페이지 입니다."
+            android:id="@+id/textView17"
+            android:layout_marginTop="15dp" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/TextView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="ID"
         android:textSize="20dp"
-        android:layout_below="@+id/imageView"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="26dp" />
+        android:layout_alignParentEnd="true" />
     <EditText
         android:id="@+id/Edit_id"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="ID를 입력하세요."
         android:layout_below="@+id/TextView1"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#904C4E4A" />
     <TextView
         android:id="@+id/TextView2"
         android:layout_width="fill_parent"
@@ -42,11 +72,12 @@
     <EditText
         android:id="@+id/Edit_password"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="비밀번호를 입력하세요."
         android:layout_below="@id/TextView2"
         android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#904C4E4A" />
     <TextView
         android:id="@+id/TextView3"
         android:layout_width="fill_parent"
@@ -58,10 +89,11 @@
     <EditText
         android:id="@+id/Edit_name"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:hint="이름을 입력하세요"
         android:layout_below="@+id/TextView3"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#904C4E4A" />
     <TextView
         android:id="@+id/TextView4"
         android:layout_width="fill_parent"
@@ -113,7 +145,8 @@
         android:text="디바이스 정보 사용 동의"
         android:textSize="20dp"
         android:layout_below="@+id/radio_position"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#90D75717" />
 
 
     <RadioButton
@@ -132,7 +165,9 @@
         android:id="@+id/joinbutton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        />
+        android:layout_gravity="center_horizontal" />
 
+    </LinearLayout>
 
+</ScrollView>
 </RelativeLayout>

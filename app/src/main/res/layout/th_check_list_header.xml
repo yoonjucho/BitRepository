@@ -8,16 +8,17 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:background="@drawable/table"
+        android:background="#90D75717"
         android:layout_gravity="center_horizontal">
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="강의"
             android:id="@+id/class_name"
-            android:textSize="25dp"
+
             android:layout_marginTop="15dp"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="40dp"/>
@@ -25,18 +26,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="시간"
             android:id="@+id/create_date"
-            android:textSize="25dp"
+
             android:layout_marginTop="15dp"
             android:layout_marginRight="40dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="출석률"
             android:id="@+id/check_per"
-            android:textSize="25dp"
+
             android:layout_marginTop="15dp"
             android:layout_marginRight="20dp"/>
 

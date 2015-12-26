@@ -6,61 +6,93 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@drawable/bg1"
     tools:context="com.example.bit_user.myapplication.MenuActivity"
-   >
+    >
 
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/imageView5"
+        android:background="@drawable/user_icon2"
+        android:layout_above="@+id/linearLayout7"
+        android:layout_alignParentStart="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/userName"
+        android:layout_above="@+id/linearLayout7"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/userType"
+        android:layout_above="@+id/linearLayout7"
+        android:layout_toEndOf="@+id/userName"
+        android:layout_marginLeft="10dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:layout_above="@+id/menu01"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="10dp"
+        android:background="#90172733"
+        android:id="@+id/linearLayout7"></LinearLayout>
 
     <ImageButton
-        android:layout_width="220dp"
-        android:layout_height="90dp"
+        android:layout_width="320dp"
+        android:layout_height="100dp"
         android:id="@+id/menu01"
         android:background="@drawable/menu1"
         android:layout_above="@+id/menu02"
-        android:layout_alignParentEnd="true" />
-
+        android:layout_centerHorizontal="true" />
     <ImageButton
-        android:layout_width="220dp"
-        android:layout_height="90dp"
+        android:layout_width="160dp"
+        android:layout_height="120dp"
         android:id="@+id/menu02"
         android:background="@drawable/menu2"
-        android:layout_above="@+id/menu04"
-        android:layout_alignParentStart="true" />
-
+        android:layout_alignTop="@+id/menu03"
+        android:layout_toStartOf="@+id/menu03" />
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="120dp"
         android:id="@+id/menu03"
-        android:background="@drawable/menu6"
-        android:layout_alignTop="@+id/menu02"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/menu02"
-        android:layout_toEndOf="@+id/menu02" />
-
-    <ImageButton
-        android:layout_width="220dp"
-        android:layout_height="90dp"
-        android:id="@+id/menu04"
         android:background="@drawable/menu3"
         android:layout_above="@+id/menu05"
-        android:layout_alignParentEnd="true" />
-
+        android:layout_alignEnd="@+id/menu01" />
     <ImageButton
-        android:layout_width="150dp"
-        android:layout_height="90dp"
-        android:id="@+id/menu05"
+        android:layout_width="160dp"
+        android:layout_height="120dp"
+        android:id="@+id/menu04"
         android:background="@drawable/menu4"
         android:layout_above="@+id/menu06"
-        android:layout_alignEnd="@+id/menu04" />
-
+        android:layout_toStartOf="@+id/menu05" />
     <ImageButton
-        android:layout_width="150dp"
-        android:layout_height="90dp"
-        android:id="@+id/menu06"
+        android:layout_width="160dp"
+        android:layout_height="120dp"
+        android:id="@+id/menu05"
         android:background="@drawable/menu5"
+        android:layout_above="@+id/menu07"
+        android:layout_alignStart="@+id/menu07" />
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="120dp"
+        android:id="@+id/menu06"
+        android:background="@drawable/menu6"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/menu03" />
-
+        android:layout_toStartOf="@+id/menu07" />
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="120dp"
+        android:id="@+id/menu07"
+        android:background="@drawable/menu7"
+        android:layout_alignTop="@+id/menu06"
+        android:layout_alignEnd="@+id/menu01" />
 
 </RelativeLayout>
 

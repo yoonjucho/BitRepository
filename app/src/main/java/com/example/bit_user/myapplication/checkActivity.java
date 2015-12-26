@@ -9,8 +9,16 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bit_user.NavigationDrawerFragment;
 import com.example.bit_user.myapllication.core.JSONResult;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.gson.Gson;
@@ -38,21 +47,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
 
-public class checkActivity extends Activity {
+public class checkActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private CharSequence mTitle;
 
     public static final String KEY_SIMPLE_DATA = "data";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     private ArrayList<String> arrayList;
     private ArrayAdapter<String> adapter;
-    private ArrayList<String>arrayListClassNo;
+    private HashMap<String,Object>arrayListClassNo;
     String lesson;
     String codeNum;
+    String position;
     EditText check_CodeNum;
     Button check_Btn;
     TextView check_day;
@@ -65,8 +78,9 @@ public class checkActivity extends Activity {
     String strDay;
     String strTime;
     Long count_timer;
-    String timer = "100";
-    Long timer1;
+    Long timer;
+    String start;
+    Long timer1 ;
     String classNo;
     TextView stu_count;
     Bundle bundleData;
@@ -84,20 +98,26 @@ public class checkActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check);
 
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
         Intent intent = getIntent();
         Bundle bundleData = intent.getBundleExtra("ID_DATA");
-    /*    Bundle bundle = intent.getBundleExtra("DATA_LIST");
-        Log.e("tiemer","되나이게"+bundle.getString("DATA"));*/
-        Log.e("login", "!!!!!!!sample" + bundleData.getString("ID"));
+        id = bundleData.getString("ID");
+        position = bundleData.getString("position");
 
         if (bundleData == null) {
             Toast.makeText(this, "Bundle data is null!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        id = bundleData.getString("ID");
         Toast.makeText(this, "ID is " + id, Toast.LENGTH_LONG).show();
-        System.out.print(id);
 
         check_day = (TextView) findViewById(R.id.check_day);
         check_time = (TextView) findViewById(R.id.check_time);
@@ -124,7 +144,7 @@ public class checkActivity extends Activity {
 
         //출석리스트 만들기
         arrayList = new ArrayList<String>();
-        arrayListClassNo = new ArrayList<String>();
+        arrayListClassNo = new HashMap<String,Object>();
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
         setListViewData();
@@ -136,22 +156,26 @@ public class checkActivity extends Activity {
         check_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("position", "" + position);
-                Log.d("getICount", "" + adapter.getCount());
-                    if (adapter != null && position != 0) {
+
+                if (adapter != null && position != 0) {
                     lesson = (String) adapter.getItem(position - 1);
-                    classNo = (String)adapter.getItem(position-1);
+                    classNo = (String)arrayListClassNo.get("CLASSNO");
+                    timer = ((Double)arrayListClassNo.get("TIMERMIN")).longValue();
+                    start = (String)arrayListClassNo.get("ATTDTIME");
+                    Log.d("start1",start.toString());
+                    Test();
+
+                    setTimer();
+                    startTimer();
+
+                    if (timer1 > 0) {
+                        setTimer();
+                        startTimer();
+                    } else {
+                        stu_count.setText("출석체크 끝!");
+                    }
                     Toast.makeText(getBaseContext(), lesson, Toast.LENGTH_SHORT).show();
                     check_lesson.setText("" + lesson);
-                        TimerTask timerTask = new TimerTask();
-                        timerTask.execute();
-                        Test();
-                        if (timer1 > 0) {
-                            setTimer();
-                            startTimer();
-                        } else {
-                            stu_count.setText("출석체크 끝!");
-                        }
                 } else {
                     Log.d("null 이다 ", "null 이다");
                 }
@@ -163,9 +187,9 @@ public class checkActivity extends Activity {
             public void onClick(View v) {
                 Log.d("ss", "ss");
                 Test();
-    /*            //str.toString();
+                //str.toString();
                 startLocationService();
-
+                codeNum = check_CodeNum.getText().toString();
                 if(longitude==null && latitude==null){
                     Toast.makeText(getApplicationContext(), "GPS를 동의해주세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -173,55 +197,16 @@ public class checkActivity extends Activity {
                 CheckTask asyncT = new CheckTask();
                 asyncT.execute();
 
-                 finish();*/
             }
         });
     }
 
-    public void Test() {
-        //시간 설정
-        String start = "2015-12-18 오후 12:00:00";
-        Calendar tempcal = Calendar.getInstance();
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
-        Date startday = sf.parse(start, new ParsePosition(0));
-
-        long startTime = startday.getTime();
-
-        //현재의 시간 설정
-        Calendar cal = Calendar.getInstance();
-        Date endDate = cal.getTime();
-        long endTime = endDate.getTime();
-
-        long mills = endTime - startTime;
-        String saaa = Long.toString(mills);
-        Log.d("시간",endDate.toString());
-        Log.d("시간2",Long.toString(endTime));
-
-        Log.d("ddd", saaa);
-        //분으로 변환
-        long min = mills / 60000;
-
-        StringBuffer diffTime = new StringBuffer();
-
-        diffTime.append("시간의 차이는").append(min).append("분 입니다.");
-        Log.d(diffTime.toString(), Long.toString(min));
-
-        timer1 = Long.parseLong(timer) - min;
-        Log.d("타이마", timer1.toString());
-
-    }
 
 
     public void setListViewData() {
         LessonListTask listTask = new LessonListTask();
         listTask.execute();
-     /*   Test();
-        if (timer1 > 0) {
-            setTimer();
-            startTimer();
-        } else {
-            stu_count.setText("출석체크 끝!");
-        }*/
+
 
     }
 
@@ -236,11 +221,15 @@ public class checkActivity extends Activity {
 
                         for (int i = 0; i < arrList.size(); i++) {
                             Log.d("addList", "addList--------------------->" + arrList.get(i) + "arrList.size()" + arrList.size());
-                            adapter.add(arrList.get(i).get("CLASSNAME").toString() +
-                                    arrList.get(i).get("STARTTIME").toString());
-                            arrayListClassNo.add(arrList.get(i).get("classNo").toString());
+                            adapter.add("                 "+arrList.get(i).get("CLASSNAME").toString() +"                 "+
+                                    arrList.get(i).get("CLASSTIME").toString());
+                            arrayListClassNo.put("CLASSNO",arrList.get(i).get("CLASSNO").toString());
+                            arrayListClassNo.put("ATTDTIME",arrList.get(i).get("ATTDTIME").toString());
+                            arrayListClassNo.put("TIMERMIN",arrList.get(i).get("TIMERMIN"));
+
 
                         }
+                        Log.d("ara",arrayListClassNo.toString());
                         check_list.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }
@@ -389,74 +378,6 @@ public class checkActivity extends Activity {
 
     }
 
-    //타이머시간 불러오기
-    private class TimerTask extends AsyncTask<String, Void, List<HashMap>> {
-
-
-        protected List<HashMap> doInBackground(String... params) {
-            JSONResultString result;
-            List<HashMap> arrayList1 = new ArrayList<HashMap>();
-            try {
-
-                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/class/classlist");
-
-                // reiquest 설정
-                request.connectTimeout(2000).readTimeout(2000);
-                // JSON  포맷으로 보내기  => POST 방식
-                request.acceptCharset("UTF-8");
-                request.acceptJson();
-                request.accept(HttpRequest.CONTENT_TYPE_JSON);
-                request.contentType("application/json", "UTF-8");
-
-                // 데이터 세팅
-                JSONObject params1 = new JSONObject();
-                params1.put("userId", id.toString());
-                params1.put("classNo",classNo);
-
-
-
-                Log.d("JoinData-->", params1.toString());
-                request.send(params1.toString());
-
-                // 3. 요청
-                int responseCode = request.code();
-                if (HttpURLConnection.HTTP_OK != responseCode) {
-                    Log.e("HTTP fail-->", "Http Response Fail:" + responseCode);
-                    return null;
-                } else {
-                    Log.e("HTTPRequest-->", "정상");
-
-                }
-
-                //4. JSON 파싱
-                Reader reader = request.bufferedReader();
-                //Log.d("Reader",reader);
-                result = GSON.fromJson(reader, JSONResultString.class);
-                reader.close();
-
-                //5. 사용하기
-                Log.d("---> ResponseResult-->", result.getResult());  // "success"? or "fail"?
-                Log.d("-->data", result.getData().toString());//데이터받아오기
-                arrayList1 = result.getData();
-
-                Log.d("ar", arrayList1.toString());
-
-                addList(arrayList1);
-
-                return result.getData();
-
-            } catch (Exception e3) {
-                e3.printStackTrace();
-            }
-            return null;
-        }
-
-        private class JSONResultString extends JSONResult<List<HashMap>> {
-
-        }
-
-    }
-
     //출석체크
     private class CheckTask extends AsyncTask<String, Void, String> {
 
@@ -522,19 +443,54 @@ public class checkActivity extends Activity {
         }
     }
 
+    //타이머 구하기
+    public void Test() {
 
-        public void setTimer () {
-            count_timer = 0L;
-            if (!timer1.toString().equals("")) {
-                count_timer = timer1;
+        Calendar tempcal = Calendar.getInstance();
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
 
-            } else
-                Toast.makeText(checkActivity.this, "Please Enter Minutes...",
-                        Toast.LENGTH_LONG).show();
-            totalTimeCountInMilliseconds = 60 * count_timer * 1000;
-            timeBlinkInMilliseconds = 30 * 1000;
-        }
+        Date startday = sf.parse(start, new ParsePosition(0));
 
+        Log.d("startday",startday.toString());
+
+        long startTime = startday.getTime();
+        Log.d("startTime",Long.toString(startTime));
+
+        //현재의 시간 설정
+        Calendar cal = Calendar.getInstance();
+        Date endDate = cal.getTime();
+        long endTime = endDate.getTime();
+
+        long mills = endTime - startTime;
+        String saaa = Long.toString(mills);
+        Log.d("시간",endDate.toString());
+        Log.d("시간2",Long.toString(endTime));
+
+
+        //분으로 변환
+        long min = mills / 60000;
+
+        StringBuffer diffTime = new StringBuffer();
+
+        diffTime.append("시간의 차이는").append(min).append("분 입니다.");
+
+        timer1 =timer- min;
+        Log.d("타이머", timer1.toString());
+
+    }
+    //timer섫정
+    public void setTimer () {
+        count_timer = 0L;
+        if (!timer1.toString().equals("")) {
+            count_timer = timer1;
+
+        } else
+            Toast.makeText(checkActivity.this, "Please Enter Minutes...",
+                    Toast.LENGTH_LONG).show();
+        totalTimeCountInMilliseconds = 60 * count_timer * 1000;
+        timeBlinkInMilliseconds = 30 * 1000;
+    }
+    //timer시작
     public void startTimer() {
         countDownTimer = new CountDownTimer(totalTimeCountInMilliseconds, 500) {
             @Override
@@ -578,6 +534,135 @@ public class checkActivity extends Activity {
         }.start();
 
     }
+    @Override
+    public void  onNavigationDrawerItemSelected(int position1) {
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        switch (position1) {
+
+            case 1:
+                Log.d("position-->case0",Integer.toString(position1));
+                //  Log.d("position",position);
+                Intent intent1 = new Intent(this, MenuActivity.class);
+                Bundle bundleData = new Bundle();
+                bundleData.putString("ID", id);
+                bundleData.putString("POSITION",position);
+                intent1.putExtra("ID_DATA", bundleData);
+                startActivity(intent1);
+                finish();
+                break;
+            case 2:
+                //Settings
+                Log.d("position-->case1",Integer.toString(position1));
+                Intent intent2 = new Intent(this, checkActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                bundleData.putString("POSITION",position);
+                intent2.putExtra("ID_DATA", bundleData);
+                startActivity(intent2);
+                break;
+            case 3:
+                Log.d("position-->case2",Integer.toString(position1));
+                Intent intent3 = new Intent(this,st_CheckListActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                bundleData.putString("POSITION",position);
+                intent3.putExtra("ID_DATA", bundleData);
+                startActivity(intent3);
+                break;
+            default:
+        }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, PlaceholderFragment.newInstance(position1 + 1))
+                .commit();
+
+        return ;
     }
+
+    public void onSectionAttached(int position) {
+        switch (position) {
+            case 1:
+                mTitle = getString(R.string.title_section0);
+
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section1);
+
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section2);
+
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section3);
+
+                break;
+        }
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main2, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main2, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((checkActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
+}
 
 

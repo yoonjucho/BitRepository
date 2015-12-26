@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,6 +55,8 @@ public class CheckListDataActivity extends Activity {
 
        /* lessonName = bundleData.getString("checkNo");
         lesson_name.setText(lessonName);*/
+        View header = (View)getLayoutInflater().inflate(R.layout.th_datalist_header,null);
+        check_data_list.addHeaderView(header);
 
         arrayList = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
@@ -136,7 +139,7 @@ public class CheckListDataActivity extends Activity {
             for (int i = 0; i < hashMaps.size(); i++) {
 
                 arrayList.add(hashMaps.get(i).get("USERNAME").toString()+"         "+
-                                hashMaps.get(i).get("STATUS"));
+                        hashMaps.get(i).get("STATUS"));
 
 
             }

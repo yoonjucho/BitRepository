@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -54,18 +55,18 @@ public class LoginActivity extends Activity {
 
     public static final String TAG = "LoginActivity";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-    //String requestURL = "http://192.168.1.13:8088/testserver2/list";
-
     public static final String KEY_SIMPLE_DATA = "data";
+
+
 
     Button loginButton;
     EditText Login_id;
     EditText Login_password;
     Handler handler = new Handler();
     Button joinform;
-
     String id;
     String password;
+    String position;
     String status;
 
     @Override
@@ -94,6 +95,8 @@ public class LoginActivity extends Activity {
                 id = Login_id.getText().toString();
                 password = Login_password.getText().toString();
 
+
+
                 try {
                     WebTask asyncT = new WebTask();
                     asyncT.execute();
@@ -111,12 +114,13 @@ public class LoginActivity extends Activity {
             Intent intent = new Intent(getBaseContext(), MenuActivity.class);
             Bundle bundleData = new Bundle();
             bundleData.putString("ID", id);
+            bundleData.putString("POSITION",position);
             intent.putExtra("ID_DATA", bundleData);
             startActivity(intent);
             finish();
         }else if(status != null && status.equals("fail")){
             Toast.makeText(getApplicationContext(), "wrong id, password",Toast.LENGTH_LONG).show();
-            //return;
+            return;
         }
     }
 
@@ -126,7 +130,7 @@ public class LoginActivity extends Activity {
 
             try {
                 //HttpClient client = new DefaultHttpClient();
-                HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/login");
+                HttpRequest request = post("http://192.168.1.13:8088/bitin/api/user/loginwithusertype");
                 request.connectTimeout(2000).readTimeout(2000);
 
                 // JSON  포맷으로 보내기  => POST 방식
@@ -140,7 +144,7 @@ public class LoginActivity extends Activity {
                 params1.put("userId",id);
                 params1.put("userPassword", password);
                 //Log.d("--->Login :", GSON.toJson(UserVo));
-
+                Log.d("JoinData-->", params1.toString());
                 // 요청
                 request.send(params1.toString());
 
@@ -156,13 +160,23 @@ public class LoginActivity extends Activity {
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
                 reader.close();
 
+                position = result.getData();
+
+                SharedPreferences preferences = getSharedPreferences("Setting",0);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("id",id);
+                editor.putString("password",password);
+                editor.putString("postion",position);
+                editor.commit();
+
+
                 //5. 사용하기
-                Log.d("---> Login", result.getResult() );
+                Log.d("---> Login --->", result.getData() );
+                Log.d("---> Login --->", result.getResult() );
 
                 status  = result.getResult();
                 checkSuccess(status);
-             /*   return result.getResult()*/;
-
+                return result.getResult();
             } catch (Exception e3) {
                 e3.printStackTrace();
             }

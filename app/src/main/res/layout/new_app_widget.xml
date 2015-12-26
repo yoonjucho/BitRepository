@@ -3,13 +3,51 @@
     android:layout_height="match_parent"
     android:padding="@dimen/widget_margin"
     android:clickable="true"
-   >
+    >
 
+    <FrameLayout
+        android:layout_width="225dp"
+        android:layout_height="100dp"
+        android:background="#90A3AAAE"
+        android:id="@+id/frameLayout1"
+        android:layout_below="@+id/frameLayout3"
+        android:layout_marginTop="5dp"
+        android:layout_alignStart="@+id/frameLayout3"
+        android:layout_alignEnd="@+id/frameLayout4">
+
+        <TextView
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="00:00"
+            android:textColor="#fff"
+            android:id="@+id/stu_count"
+            android:layout_below="@+id/linearLayout3"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:textSize="35dp" />
+
+        <TextView
+            android:layout_width="111dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/lessonName"
+            android:layout_gravity="center_horizontal|bottom"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/time_icon"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="30dp" />
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="200dp"
         android:layout_height="80dp"
-        android:background="#9030DFF2"
+        android:background="#9032AEB8"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/frameLayout3"
@@ -23,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Notice"
-            android:id="@+id/textView10"
+            android:id="@+id/notice"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="left|top" />
@@ -42,6 +80,21 @@
             android:background="@drawable/table"
             android:layout_marginBottom="5dp"
             android:layout_gravity="center_horizontal|bottom" />
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/notice_view"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
 
 
     </FrameLayout>
@@ -68,50 +121,6 @@
             android:id="@+id/textView12"
             android:layout_marginRight="5dp"
             android:layout_gravity="right|bottom" />
-    </FrameLayout>
-    <FrameLayout
-        android:layout_width="225dp"
-        android:layout_height="80dp"
-        android:background="#90A3AAAE"
-        android:id="@+id/frameLayout1"
-        android:layout_below="@+id/frameLayout3"
-        android:layout_marginTop="5dp"
-        android:layout_alignStart="@+id/frameLayout3"
-        android:layout_alignEnd="@+id/frameLayout4">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Time"
-            android:layout_marginLeft="60dp"
-            android:id="@+id/textView11"
-            android:layout_gravity="left|center_vertical" />
-
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/time_icon1"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="left|center_vertical" />
-
-        <TextView
-            android:layout_width="191dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="00:00"
-            android:textColor="#fff"
-            android:id="@+id/stu_count"
-            android:layout_below="@+id/linearLayout3"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="right|center_vertical" />
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/refresh_icon"
-            android:layout_marginLeft="300dp"
-            android:id="@+id/refresh_btn"
-            android:layout_gravity="left|center_vertical" />
     </FrameLayout>
 
 

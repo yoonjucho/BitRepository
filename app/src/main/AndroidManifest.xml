@@ -21,7 +21,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!--
      To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
      option is required to comply with the Google+ Sign-In developer policies
@@ -39,11 +39,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.DeviceDefault.NoActionBar" >
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -87,12 +89,6 @@
             android:name=".QnAActivity"
             android:label="@string/title_activity_qn_a" />
         <activity
-            android:name=".DataInesertActivity"
-            android:label="@string/title_activity_data_inesert" />
-        <activity
-            android:name=".DataListActivity"
-            android:label="@string/title_activity_data_list" />
-        <activity
             android:name=".checkUpActivity"
             android:label="@string/title_activity_check_up" />
         <activity
@@ -113,9 +109,30 @@
             android:name=".CheckListDataActivity"
             android:label="@string/title_activity_check_list_data" >
         </activity>
+        <activity
+            android:name=".VoteListTeacher"
+            android:label="@string/title_activity_votelist_teacher" />
+        <activity
+            android:name=".VoteListStudent"
+            android:label="@string/title_activity_votelist_student" />
+        <activity
+            android:name=".doVoteActivity"
+            android:label="@string/title_activity_do_vote" />
+        <activity
+            android:name=".NoticeTeacherActivity"
+            android:label="@string/title_activity_notice_teacher" />
+        <activity
+            android:name=".MessageTeacher"
+            android:label="@string/title_activity_message_teacher" />
+        <activity
+            android:name=".NoticeStudentActivity"
+            android:label="@string/title_activity_notice_student" />
+        <activity
+            android:name=".VoteResultActivity"
+            android:label="@string/title_activity_vote_result" />
 
         <!-- GCM 泥섎━ ?쒕퉬?? -->
-        <service android:name=".GCMIntentService" />
+    <service android:name=".GCMIntentService" />
 
         <receiver
             android:name=".GCMBroadcastReceiver"
@@ -131,7 +148,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
         <receiver android:name=".NewAppWidget" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -140,7 +156,14 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/new_app_widget_info" />
+
+
         </receiver>
+        <service android:enabled="true" android:name=".NewAppWidget$UpdateService" />
+        <activity
+            android:name="com.example.bit_user.Main2Activity"
+            android:label="@string/title_activity_main2" >
+        </activity>
     </application>
 
 </manifest>

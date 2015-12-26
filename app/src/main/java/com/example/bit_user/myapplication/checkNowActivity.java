@@ -6,8 +6,16 @@ import android.content.Intent;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.view.View.OnClickListener;
@@ -16,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bit_user.NavigationDrawerFragment;
 import com.example.bit_user.myapllication.core.JSONResult;
 import com.example.bit_user.myapllication.core.SafeAsyncTask;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -35,14 +44,17 @@ import java.util.HashMap;
 import static com.github.kevinsawicki.http.HttpRequest.post;
 
 
-public class  checkNowActivity extends Activity implements OnClickListener {
+public class  checkNowActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks,OnClickListener {
+
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private CharSequence mTitle;
     public static final String KEY_SIMPLE_DATA = "data";
     private static final Gson GSON = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
     int i=-1;
     String id;
     String lesson;
-    Long endTime;
-    Date endDate;
+    String endTime;
+    String endDate;
     int count_timer;
     String codenum;
     String classNo;
@@ -66,6 +78,17 @@ public class  checkNowActivity extends Activity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_now);
+
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
         Intent intent = getIntent();
         datalist = new ArrayList<String>();
         bundleData = intent.getBundleExtra("DATA");
@@ -76,11 +99,9 @@ public class  checkNowActivity extends Activity implements OnClickListener {
         Log.d("dd", datalist.toString());
 
         Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss");
-        Calendar cal = Calendar.getInstance();
-        endDate = cal.getTime();
-        endTime = endDate.getTime();
-
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd a hh:mm:ss", java.util.Locale.getDefault());
+        endTime = dateformat.format(date);
+        Log.d("endTime",endTime.toString());
 
         code_num = (TextView) findViewById(R.id.code_num);
         count = (TextView) findViewById(R.id.count);
@@ -118,7 +139,10 @@ public class  checkNowActivity extends Activity implements OnClickListener {
         }
     }
 
-    public void setTimer() {
+
+
+    private void setTimer() {
+
         count_timer = 0;
         if (!timer.toString().equals("")) {
             count_timer = Integer.parseInt(timer);
@@ -194,7 +218,7 @@ public class  checkNowActivity extends Activity implements OnClickListener {
                 // 데이터 세팅
                 JSONObject params1 = new JSONObject();
                 params1.put("classNo",classNo);
-                params1.put("startTime",endDate);
+                params1.put("startTime",endTime);
                 params1.put("timer",count_timer);
 
 
@@ -240,6 +264,7 @@ public class  checkNowActivity extends Activity implements OnClickListener {
             super.onSuccess(String);
 
             for(int i = 0; i<String.size(); i++){
+
                 arrayList.add(String.get(i).toString());
                 Log.d(" arrayList",arrayList.toString());
             }
@@ -251,4 +276,140 @@ public class  checkNowActivity extends Activity implements OnClickListener {
         }
 
     }
+    @Override
+    public void  onNavigationDrawerItemSelected(int position1) {
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        switch (position1) {
+            case 0:
+                Log.d("position",Integer.toString(position1));
+                //  Log.d("position",position);
+/*              Intent intent1 = new Intent(this,MenuActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                bundleData.putString("position",position);
+                intent1.putExtra("ID_DATA", bundleData);
+                startActivity(intent1);*/
+                break;
+            case 1:
+                //Settings
+                Log.d("position",Integer.toString(position1));
+                Intent intent2 = new Intent(this, checkUpActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                intent2.putExtra("ID_DATA", bundleData);
+                startActivity(intent2);
+                break;
+            case 2:
+                Log.d("position",Integer.toString(position1));
+                Intent intent3 = new Intent(this, checkNowActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                intent3.putExtra("ID_DATA", bundleData);
+                startActivity(intent3);
+                break;
+            case 3:
+                Log.d("position",Integer.toString(position1));
+                Intent intent4 = new Intent(this, checkListActivity.class);
+                bundleData = new Bundle();
+                bundleData.putString("ID",id);
+                intent4.putExtra("ID_DATA", bundleData);
+                startActivity(intent4);
+                break;
+
+            default:
+        }
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, PlaceholderFragment.newInstance(position1 + 1))
+                .commit();
+
+        return ;
+    }
+
+    public void onSectionAttached(int position) {
+        switch (position) {
+            case 1:
+                mTitle = getString(R.string.title_section1);
+           /*    Intent intent71 = new Intent(this,MenuActivity.class);
+                startActivity(intent71);*/
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section4);
+             /*  Intent intent72 = new Intent(this,checkActivity.class);
+                startActivity(intent72);*/
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section5);
+             /*   Intent intent73 = new Intent(this,st_CheckListActivity.class);
+                startActivity(intent73);*/
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section6);
+                break;
+        }
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main2, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment = new PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_main2, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            super.onAttach(activity);
+            ((checkNowActivity) activity).onSectionAttached(
+                    getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+    }
+
 }

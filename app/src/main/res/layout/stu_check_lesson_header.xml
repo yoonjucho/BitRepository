@@ -8,8 +8,16 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:background="@drawable/table"
+        android:background="#9055BEDB"
         android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/imageView6"
+            android:background="@drawable/head_icon"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -17,7 +25,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="강의명"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="60dp"
             android:id="@+id/textView" />
 
         <TextView

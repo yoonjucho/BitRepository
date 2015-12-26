@@ -116,12 +116,10 @@ public class GCMPush extends Activity {
                 HttpRequest request = post("http://192.168.1.13:8088/testserver2/api/user/phoneidlist-by-groupno");
                 request.connectTimeout(2000).readTimeout(2000);
 
-
                 request.acceptCharset("UTF-8");
                 request.acceptJson();
                 request.accept(HttpRequest.CONTENT_TYPE_JSON);
                 request.contentType( "application/json", "UTF-8" );
-
 
                 JSONObject params1 = new JSONObject();
                 //params1.put("id", id);
@@ -139,7 +137,6 @@ public class GCMPush extends Activity {
                 }else {
                     Log.e("HTTPRequest-->", "정상");
                 }
-
 
                 Reader reader = request.bufferedReader();
                 JSONResultString result = GSON.fromJson(reader, JSONResultString.class);
@@ -214,7 +211,6 @@ public class GCMPush extends Activity {
         public void sendText(String msg)
                 throws Exception
         {
-
             if( random == null){
                 random = new Random(System.currentTimeMillis());
             }
