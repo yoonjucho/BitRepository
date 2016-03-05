@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/media1"  android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/drawhome_icon"
+            android:title="Home"/>
+        <item
+            android:id="@+id/nav_checkup"
+            android:icon="@drawable/drawup_icon"
+            android:title="출석 체크 업로드"/>
+        <item
+            android:id="@+id/nav_checkNow"
+            android:icon="@drawable/time_icon"
+            android:title="현재 출석 체크"/>
+
+        <item
+            android:id="@+id/nav_ThChecklist"
+            android:icon="@drawable/drawlist_icon"
+            android:title="출석 체크 현황"/>
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_mypage1"
+                android:icon="@drawable/drawuser_icon"
+                android:title="마이페이지"/>
+        </menu>
+    </item>
+</menu>

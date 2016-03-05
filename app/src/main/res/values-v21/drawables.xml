@@ -1,0 +1,8 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <item name="ic_menu_camera" type="drawable">@drawable/notice_icon</item>
+    <item name="ic_menu_gallery" type="drawable">@drawable/notice_icon</item>
+    <item name="ic_menu_slideshow" type="drawable">@drawable/notice_icon</item>
+    <item name="ic_menu_manage" type="drawable">@drawable/notice_icon</item>
+    <item name="ic_menu_share" type="drawable">@drawable/notice_icon</item>
+    <item name="ic_menu_send" type="drawable">@drawable/notice_icon</item>
+</resources>
